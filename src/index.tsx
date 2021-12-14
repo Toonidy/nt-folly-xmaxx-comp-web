@@ -1,11 +1,20 @@
 import React from "react"
 import ReactDOM from "react-dom"
+import { BrowserRouter } from "react-router-dom"
+import { CssBaseline } from "@mui/material"
+import { ThemeProvider } from "@mui/material/styles"
 import { App } from "./App"
+import { MainTheme } from "./theme"
 import reportWebVitals from "./reportWebVitals"
 
 ReactDOM.render(
 	<React.StrictMode>
-		<App />
+		<ThemeProvider theme={MainTheme}>
+			<CssBaseline />
+			<BrowserRouter>
+				<App />
+			</BrowserRouter>
+		</ThemeProvider>
 	</React.StrictMode>,
 	document.getElementById("root"),
 )
