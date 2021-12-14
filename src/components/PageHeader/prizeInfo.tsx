@@ -28,8 +28,7 @@ export const PrizeInfo = () => {
 						Nitro Type Gold <small>(non gold members)</small>
 					</Typography>
 					<Typography component={"li"} variant={"body2"} sx={{ letterSpacing: "1px" }}>
-						<strong>1x</strong> -
-						<NTCashIcon />
+						<strong>1x</strong> - <NTCashIcon />
 						{" 300 million"}
 						<small>(gold members)</small>
 					</Typography>
