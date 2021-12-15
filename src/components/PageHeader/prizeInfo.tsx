@@ -24,7 +24,7 @@ export const PrizeInfo = () => {
 				</Typography>
 				<ul>
 					<Typography component={"li"} variant={"body2"} sx={{ letterSpacing: "1px" }}>
-						<strong>2x</strong> - <Box component={"img"} src={NTGoldIcon} alt={"Nitro Type Gold Icon"} sx={{ width: "16px", height: "16px" }} />{" "}
+						<strong>2x</strong> - <Box component={"img"} src={NTGoldIcon} alt={"Nitro Type Gold Icon"} sx={{ width: "24px", height: "18px" }} />{" "}
 						Nitro Type Gold <small>(non gold members)</small>
 					</Typography>
 					<Typography component={"li"} variant={"body2"} sx={{ letterSpacing: "1px" }}>
