@@ -14,7 +14,7 @@ export const App = () => {
 		<Box sx={{ mb: 2 }}>
 			<Snowfall />
 
-			<Container sx={{ position: "relative", mt: 4 }}>
+			<Container sx={{ mt: 4 }}>
 				<Paper elevation={0} sx={{ borderRadius: "16px" }}>
 					{/* Header */}
 					<Box

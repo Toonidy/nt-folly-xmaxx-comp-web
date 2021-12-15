@@ -1,4 +1,6 @@
 import { useTheme, Box } from "@mui/material"
+import { CalendarDate } from "./calendarDate"
+import { DailyPrize } from "./dailyPrize"
 
 /**
  * Competition Result Section.
@@ -14,20 +16,25 @@ export const CompetitionResult = () => {
 				backgroundSize: "cover",
 				backgroundRepeat: "no-repeat",
 				color: theme.palette.primary.contrastText,
-				fontSize: theme.typography.pxToRem(24),
-				fontWeight: 600,
-				textAlign: "center",
 			}}
 		>
 			<Box
 				sx={{
+					display: "flex",
+					justifyContent: "space-between",
 					py: 4,
 					px: 2,
 					height: "400px",
 					backgroundColor: "rgba(0,0,0,0.3)",
 				}}
 			>
-				Comp Page coming soon hehe...
+				<Box sx={{ mr: 4 }}>
+					<CalendarDate />
+					<Box sx={{ mt: 2 }}>
+						<DailyPrize />
+					</Box>
+				</Box>
+				<Box sx={{ flexGrow: 1 }}>Test Cakes LOL</Box>
 			</Box>
 		</Box>
 	)
