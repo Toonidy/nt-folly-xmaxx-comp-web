@@ -1,9 +1,4 @@
-.alice-carousel__prev-btn,
-.alice-carousel__next-btn {
-	font-size: 4rem;
-}
-
-.alice-carousel__prev-btn span,
-.alice-carousel__next-btn span {
-	color: #eee;
+.carousel__inner-slide {
+	padding-left: 10px;
+	padding-right: 10px;
 }
