@@ -1,3 +1,5 @@
+import dayjs from "dayjs"
+
 interface DateRange {
 	from: Date
 	to: Date
@@ -40,3 +42,17 @@ export const CompetitionDates: DateRange[] = [
 		to: new Date("2021-10-25T22:30:00.000+08:00"),
 	},
 ]
+
+/** List of competition times. */
+export const CompetitionTimes: DateRange[] = Array.from(Array(144).keys()).map((_, i) => {
+	const from = dayjs(MainCompetitionRange.from)
+			.add(i * 10, "m")
+			.toDate(),
+		to = dayjs(MainCompetitionRange.from)
+			.add((i + 1) * 10, "m")
+			.toDate()
+	return {
+		from,
+		to,
+	}
+})

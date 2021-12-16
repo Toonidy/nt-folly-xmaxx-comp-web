@@ -1,20 +1,30 @@
 import React from "react"
 import ReactDOM from "react-dom"
 import { BrowserRouter } from "react-router-dom"
+import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client"
 import { CssBaseline } from "@mui/material"
 import { ThemeProvider } from "@mui/material/styles"
 import { App } from "./App"
 import { MainTheme } from "./theme"
 import reportWebVitals from "./reportWebVitals"
 
+// Setup GraphQL Client
+const client = new ApolloClient({
+	uri: `//${window.location.host}/api/gql/query`,
+	cache: new InMemoryCache(),
+})
+
+// Render the main app
 ReactDOM.render(
 	<React.StrictMode>
-		<ThemeProvider theme={MainTheme}>
-			<CssBaseline />
-			<BrowserRouter>
-				<App />
-			</BrowserRouter>
-		</ThemeProvider>
+		<ApolloProvider client={client}>
+			<ThemeProvider theme={MainTheme}>
+				<CssBaseline />
+				<BrowserRouter>
+					<App />
+				</BrowserRouter>
+			</ThemeProvider>
+		</ApolloProvider>
 	</React.StrictMode>,
 	document.getElementById("root"),
 )
