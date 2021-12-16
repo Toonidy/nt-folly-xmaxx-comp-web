@@ -5,6 +5,10 @@ export const MainTheme = createTheme({
 		background: {
 			default: "#283E51",
 		},
+		text: {
+			primary: "#404040",
+			secondary: "#606c76",
+		},
 	},
 	typography: {
 		h1: {

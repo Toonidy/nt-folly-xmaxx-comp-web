@@ -3,6 +3,7 @@ import { useTheme, Box, Paper, Container, Typography, Link, Table, TableBody, Ta
 import { Logo } from "./components/PageHeader/logo"
 import { PrizeInfo } from "./components/PageHeader/prizeInfo"
 import { NTCashIcon } from "./components/Icon/ntCash"
+import { CompetitionResult } from "./components/CompetitionResult"
 
 /**
  * Main App for the Folly Times Xmaxx Comp.
@@ -10,18 +11,11 @@ import { NTCashIcon } from "./components/Icon/ntCash"
 export const App = () => {
 	const theme = useTheme()
 	return (
-		<Box
-			sx={{
-				display: "flex",
-				flexDirection: "column",
-				minHeight: "100vh",
-				height: "100vh",
-			}}
-		>
+		<Box sx={{ mb: 2 }}>
 			<Snowfall />
 
-			<Container sx={{ position: "relative", mt: 4 }}>
-				<Paper elevation={0} sx={{ borderRadius: 4 }}>
+			<Container sx={{ mt: 4 }}>
+				<Paper elevation={0} sx={{ borderRadius: "16px" }}>
 					{/* Header */}
 					<Box
 						component={"header"}
@@ -41,21 +35,10 @@ export const App = () => {
 
 					{/* Body */}
 					<main>
-						<Box
-							sx={{
-								mb: 2,
-								py: 4,
-								px: 2,
-								backgroundColor: theme.palette.grey[400],
-								color: theme.palette.getContrastText(theme.palette.grey[400]),
-								fontSize: theme.typography.pxToRem(24),
-								fontWeight: 600,
-								textAlign: "center",
-							}}
-						>
-							Comp Page coming soon hehe...
-						</Box>
-						<Box component={"main"} sx={{ p: 2 }}>
+						<CompetitionResult />
+
+						{/* Comp Info Section */}
+						<Box component={"section"} sx={{ p: 2 }}>
 							<Box sx={{ display: "flex", justifyContent: "space-between" }}>
 								<div>
 									<Typography variant={"h2"} gutterBottom sx={{ fontFamily: "Rajdhani, sans-serif" }}>
@@ -141,21 +124,27 @@ export const App = () => {
 							</Box>
 						</Box>
 					</main>
+					{/* Footer */}
+					<Typography
+						component={"footer"}
+						variant={"body2"}
+						sx={{
+							position: "relative",
+							mt: 4,
+							p: 2,
+							borderBottomLeftRadius: "14px",
+							borderBottomRightRadius: "14px",
+							backgroundColor: theme.palette.grey[800],
+							color: theme.palette.getContrastText(theme.palette.background.default),
+							textAlign: "center",
+						}}
+					>
+						Copyright &copy; {new Date().getFullYear()}{" "}
+						<Link href={"https://folly.team/"} sx={{ fontWeight: 600, color: "#eee" }}>
+							Folly Times
+						</Link>
+					</Typography>
 				</Paper>
-
-				{/* Footer */}
-				<Typography
-					component={"footer"}
-					variant={"body2"}
-					sx={{
-						position: "relative",
-						mt: 4,
-						color: theme.palette.getContrastText(theme.palette.background.default),
-						textAlign: "center",
-					}}
-				>
-					Copyright &copy; {new Date().getFullYear()} <Link href={"https://folly.team/"}>Folly Times</Link>
-				</Typography>
 			</Container>
 		</Box>
 	)

@@ -1,5 +1,4 @@
 import { useTheme, Box, Typography } from "@mui/material"
-import TeamLogo from "../../assets/images/logo.svg"
 
 /**
  * Display the Team Logo and Website Title.
@@ -17,7 +16,7 @@ export const Logo = () => {
 		>
 			<Box
 				component={"img"}
-				src={TeamLogo}
+				src={"/logo.svg"}
 				alt={"Team Logo"}
 				sx={{
 					width: "128px",
