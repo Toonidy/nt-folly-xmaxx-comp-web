@@ -29,7 +29,7 @@ export const PrizeInfo = () => {
 					</Typography>
 					<Typography component={"li"} variant={"body2"} sx={{ letterSpacing: "1px" }}>
 						<strong>1x</strong> - <NTCashIcon />
-						{" 300 million"}
+						{" 100 million "}
 						<small>(gold members)</small>
 					</Typography>
 					<Typography component={"li"} variant={"body2"} sx={{ letterSpacing: "1px" }}>
