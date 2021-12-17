@@ -10,7 +10,7 @@ import reportWebVitals from "./reportWebVitals"
 
 // Setup GraphQL Client
 const client = new ApolloClient({
-	uri: `//${window.location.host}/api/gql/query`,
+	uri: `//${process.env.NODE_ENV === "production" ? process.env.REACT_APP_API_ENDPOINT : window.location.host}/api/gql/query`,
 	cache: new InMemoryCache(),
 })
 
