@@ -87,12 +87,15 @@ export const App = () => {
 								Tips
 							</Typography>
 							<ul>
-								<li>
+								<Typography component={"li"}>
 									View the Blitz Challenge Calendar and try to win <em>Bonus Points</em>
-								</li>
-								<li>
+								</Typography>
+								<Typography component={"li"}>
 									Don't have time to race? Just do <em>one</em> and try to win the accuracy reward at any <em>blitz timeslot</em>.
-								</li>
+								</Typography>
+								<Typography component={"li"}>
+									Blitzes technically starts and ends at every X:X1; the scheduled times displayed are for easy readings
+								</Typography>
 							</ul>
 						</Box>
 					</main>

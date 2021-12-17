@@ -1,16 +1,136 @@
 import dayjs from "dayjs"
-import relativeTime from "dayjs/plugin/relativeTime"
-import { useTheme, Box, Paper, Typography, Chip, Button, TableContainer, Table, TableHead, TableRow, TableCell, TableBody } from "@mui/material"
-import { AccessTime, EmojiEvents } from "@mui/icons-material"
+import { useState, useEffect } from "react"
+import { gql, useLazyQuery } from "@apollo/client"
+import { useTheme, Box, Paper, Typography, Skeleton, TableContainer, Table, TableHead, TableRow, TableCell, TableBody } from "@mui/material"
+import { AccessTime } from "@mui/icons-material"
 import { CalendarDate } from "./calendarDate"
+import { CompCountdownChip } from "./compCountdownChip"
+import { CompetitionDates } from "../../constants/competitions"
 
-dayjs.extend(relativeTime)
+/** Ranks List for iterating purposes. */
+const RANKS = ["🥇 1st", "🥈 2nd", "🥉 3rd", "🎖️ 4th", "🎖️ 5th"]
+
+/** GQL query to get competition rewards between 2 dates. */
+const COMPETITIONS = gql`
+	query competitions($timeFrom: Time!, $timeTo: Time!) {
+		competitions(timeRange: { timeFrom: $timeFrom, timeTo: $timeTo }) {
+			id
+			multiplier
+			startAt
+			finishAt
+			leaderboard {
+				id
+				speedScore
+				accuracyScore
+				grindScore
+				pointScore
+				grindRank
+				user {
+					id
+					username
+					displayName
+					status
+				}
+			}
+			grindRewards {
+				rank
+				points
+			}
+			pointRewards {
+				rank
+				points
+			}
+			speedRewards {
+				rank
+				points
+			}
+			accuracyRewards {
+				rank
+				points
+			}
+		}
+	}
+`
+
+/** Competition Rewards gql object. */
+interface Competition {
+	id: string
+	multiplier: number
+	startAt: Date
+	finishAt: Date
+	leaderboard: CompetitionUser[]
+	grindRewards: CompetitionPrize[]
+	pointRewards: CompetitionPrize[]
+	speedRewards: CompetitionPrize[]
+	accuracyRewards: CompetitionPrize[]
+}
+
+/** Competition Prize gql object. */
+interface CompetitionPrize {
+	rank: number
+	points: number
+}
+
+/** User Status values. */
+enum UserStatus {
+	NEW = "NEW",
+	ACTIVE = "ACTIVE",
+	DISQUALIFIED = "DISQUALIFIED",
+}
+
+/** Competition User gql obj. */
+interface CompetitionUser {
+	id: string
+	speedScore: number
+	accuracyScore: number
+	grindScore: number
+	pointScore: number
+	grindRank: number
+	user: {
+		username: string
+		displayName: string
+		status: UserStatus
+	}
+}
 
 /**
  * Competition Result Section.
  */
 export const CompetitionResult = () => {
 	const theme = useTheme()
+	const now = new Date()
+	const [day, setDay] = useState(CompetitionDates.findIndex((t) => t.from > now))
+
+	const [loadCompetitions, { data, loading }] = useLazyQuery<{ competitions: Competition[] }>(COMPETITIONS)
+
+	const currentComp =
+		data &&
+		data.competitions &&
+		data.competitions.find((c) => {
+			return new Date(c.startAt) > now
+		})
+	const leaderboard = currentComp
+		? currentComp.leaderboard
+				.filter((r) => r.accuracyScore + r.grindScore + r.speedScore + r.pointScore > 0)
+				.map((r) => {
+					return {
+						username: r.user.username,
+						displayName: r.user.displayName,
+						grindRank: r.grindRank,
+						total: r.accuracyScore + r.grindScore + r.speedScore + r.pointScore,
+					}
+				})
+		: []
+
+	useEffect(() => {
+		loadCompetitions({
+			variables: {
+				timeFrom: CompetitionDates[day].from,
+				timeTo: CompetitionDates[day].to,
+			},
+		})
+	}, [day, loadCompetitions])
+
 	return (
 		<Box
 			component={"section"}
@@ -32,7 +152,7 @@ export const CompetitionResult = () => {
 				}}
 			>
 				<Box sx={{ mr: 4 }}>
-					<CalendarDate />
+					<CalendarDate onDayChange={(d) => setDay(d)} />
 				</Box>
 				<Box
 					sx={{
@@ -53,17 +173,10 @@ export const CompetitionResult = () => {
 								letterSpacing: "1px",
 							}}
 						>
-							Daily Leaderboard
+							Daily Leaderboard - {dayjs(CompetitionDates[day].from).format("DD MMM YYYY")} to{" "}
+							{dayjs(CompetitionDates[day].to).format("DD MMM YYYY")}
 						</Typography>
-						<Chip
-							variant={"filled"}
-							color={"error"}
-							label={"Ends in"}
-							sx={{
-								fontFamily: "Rajdhani,sans-serif",
-								fontWeight: 500,
-							}}
-						/>
+						<CompCountdownChip day={day} />
 					</Box>
 
 					<Box sx={{ display: "flex" }}>
@@ -78,37 +191,35 @@ export const CompetitionResult = () => {
 										</TableRow>
 									</TableHead>
 									<TableBody>
-										<TableRow>
-											<TableCell>🥇 1st</TableCell>
-											<TableCell>Test Cakes</TableCell>
-											<TableCell>10 Points</TableCell>
-										</TableRow>
-										<TableRow>
-											<TableCell>🥈 2nd</TableCell>
-											<TableCell>Test Cakes</TableCell>
-											<TableCell>7 Points</TableCell>
-										</TableRow>
-										<TableRow>
-											<TableCell>🥉 3rd</TableCell>
-											<TableCell>Test Cakes</TableCell>
-											<TableCell>5 Points</TableCell>
-										</TableRow>
-										<TableRow>
-											<TableCell>🎖️ 4th</TableCell>
-											<TableCell>Test Cakes</TableCell>
-											<TableCell>3 Points</TableCell>
-										</TableRow>
-										<TableRow>
-											<TableCell>🎖️ 5th</TableCell>
-											<TableCell>Test Cakes</TableCell>
-											<TableCell>1 Points</TableCell>
-										</TableRow>
+										{loading && (
+											<TableRow>
+												<TableCell colSpan={3}>Loading...</TableCell>
+											</TableRow>
+										)}
+										{!loading && CompetitionDates[day].from > now && (
+											<TableRow>
+												<TableCell colSpan={3}>This competition has not started.</TableCell>
+											</TableRow>
+										)}
+										{!loading && CompetitionDates[day].from < now && leaderboard.length === 0 && (
+											<TableRow>
+												<TableCell colSpan={3}>No results yet wah...</TableCell>
+											</TableRow>
+										)}
+
+										{/* {RANKS.map((r, i) => (
+											<TableRow key={`current-blitz-info-lb-rank-${i}`}>
+												<TableCell>{r}</TableCell>
+												<TableCell>Test Cakes</TableCell>
+												<TableCell>{leaderboard[i]} Points</TableCell>
+											</TableRow>
+										))} */}
 									</TableBody>
 								</Table>
 							</TableContainer>
-							<Button type={"button"} variant={"outlined"} color={"inherit"} startIcon={<EmojiEvents />} fullWidth sx={{ mt: 2 }}>
+							{/* <Button type={"button"} variant={"outlined"} color={"inherit"} startIcon={<EmojiEvents />} fullWidth sx={{ mt: 2 }}>
 								View More
-							</Button>
+							</Button> */}
 						</Box>
 						<Box sx={{ flexGrow: 1, borderRadius: "8px", border: `1px solid #eee`, backgroundColor: "rgba(60, 60, 60, 0.7)", p: 2 }}>
 							<Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
@@ -128,30 +239,36 @@ export const CompetitionResult = () => {
 									</Typography>
 									<Typography sx={{ display: "flex" }}>
 										<AccessTime sx={{ mr: "1ch" }} />
-										<span>{` 10:00 AM - 10:10 AM`}</span>
+										{currentComp && (
+											<span>{` ${dayjs(currentComp.startAt).subtract(1, "m").format("hh:mm A")} - ${dayjs(currentComp.finishAt)
+												.subtract(1, "m")
+												.format("hh:mm A")}`}</span>
+										)}
 									</Typography>
 								</div>
-								<div>
-									<Box
-										sx={{
-											display: "flex",
-											justifyContent: "center",
-											alignItems: "center",
-											width: "80px",
-											height: "80px",
-											textShadow: "2px 4px 3px rgba(0, 0, 0, 0.3)",
-											backgroundImage: "radial-gradient(#fff92c, #584707)",
-											border: "2px solid yellow",
-											borderRadius: "8px",
-											fontFamily: "Rajdhani,sans-serif",
-											fontSize: theme.typography.pxToRem(32),
-											fontWeight: 800,
-											color: "#fff",
-										}}
-									>
-										x4
-									</Box>
-								</div>
+								{currentComp && (
+									<div>
+										<Box
+											sx={{
+												display: "flex",
+												justifyContent: "center",
+												alignItems: "center",
+												width: "80px",
+												height: "80px",
+												textShadow: "2px 4px 3px rgba(0, 0, 0, 0.3)",
+												backgroundImage: getMultiplierBackgroundColor(currentComp.multiplier),
+												border: "2px solid yellow",
+												borderRadius: "8px",
+												fontFamily: "Rajdhani,sans-serif",
+												fontSize: theme.typography.pxToRem(32),
+												fontWeight: 800,
+												color: "#fff",
+											}}
+										>
+											x{currentComp.multiplier}
+										</Box>
+									</div>
+								)}
 							</Box>
 							<TableContainer
 								sx={{
@@ -182,41 +299,36 @@ export const CompetitionResult = () => {
 										</TableRow>
 									</TableHead>
 									<TableBody>
-										<TableRow>
-											<TableCell>🥇 1st</TableCell>
-											<TableCell>10 points</TableCell>
-											<TableCell>10 points</TableCell>
-											<TableCell>10 points</TableCell>
-											<TableCell>10 points</TableCell>
-										</TableRow>
-										<TableRow>
-											<TableCell>🥈 2nd</TableCell>
-											<TableCell>7 points</TableCell>
-											<TableCell>7 points</TableCell>
-											<TableCell>7 points</TableCell>
-											<TableCell>7 points</TableCell>
-										</TableRow>
-										<TableRow>
-											<TableCell>🥉 3rd</TableCell>
-											<TableCell>5 points</TableCell>
-											<TableCell>5 points</TableCell>
-											<TableCell>5 points</TableCell>
-											<TableCell>5 points</TableCell>
-										</TableRow>
-										<TableRow>
-											<TableCell>🎖️ 4th</TableCell>
-											<TableCell>3 points</TableCell>
-											<TableCell>3 points</TableCell>
-											<TableCell>3 points</TableCell>
-											<TableCell>3 points</TableCell>
-										</TableRow>
-										<TableRow>
-											<TableCell>🎖️ 4th</TableCell>
-											<TableCell>1 points</TableCell>
-											<TableCell>1 points</TableCell>
-											<TableCell>1 points</TableCell>
-											<TableCell>1 points</TableCell>
-										</TableRow>
+										{RANKS.map((rank, i) => (
+											<TableRow key={`current-blitz-info-rank-${i}`}>
+												<TableCell>{rank}</TableCell>
+												{loading && (
+													<TableCell colSpan={4}>
+														<Skeleton variant={"rectangular"} />
+													</TableCell>
+												)}
+
+												{!loading && currentComp?.grindRewards[i] && (
+													<TableCell>{currentComp.multiplier * currentComp.grindRewards[i].points} points</TableCell>
+												)}
+												{!loading && !currentComp?.grindRewards[i] && <TableCell>???</TableCell>}
+
+												{!loading && currentComp?.accuracyRewards[i] && (
+													<TableCell>{currentComp.multiplier * currentComp.accuracyRewards[i].points} points</TableCell>
+												)}
+												{!loading && !currentComp?.accuracyRewards[i] && <TableCell>???</TableCell>}
+
+												{!loading && currentComp?.speedRewards[i] && (
+													<TableCell>{currentComp.multiplier * currentComp.speedRewards[i].points} points</TableCell>
+												)}
+												{!loading && !currentComp?.speedRewards[i] && <TableCell>???</TableCell>}
+
+												{!loading && currentComp?.pointRewards[i] && (
+													<TableCell>{currentComp.multiplier * currentComp.pointRewards[i].points} points</TableCell>
+												)}
+												{!loading && !currentComp?.pointRewards[i] && <TableCell>???</TableCell>}
+											</TableRow>
+										))}
 									</TableBody>
 								</Table>
 							</TableContainer>
@@ -226,4 +338,18 @@ export const CompetitionResult = () => {
 			</Box>
 		</Box>
 	)
+}
+
+const getMultiplierBackgroundColor = (m: number) => {
+	switch (m) {
+		case 1:
+			return "radial-gradient(#6abb1e, #175117)"
+		case 2:
+			return "radial-gradient(#2cc0ff, #143877)"
+		case 4:
+			return "radial-gradient(#c359ff, #4c2483)"
+		case 8:
+			return "radial-gradient(#ea8d23, #78371d)"
+	}
+	return undefined
 }

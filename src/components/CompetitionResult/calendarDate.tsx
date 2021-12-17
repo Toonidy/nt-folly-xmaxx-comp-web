@@ -1,5 +1,5 @@
 import dayjs from "dayjs"
-import React, { useState, useEffect, useCallback } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { gql, useLazyQuery } from "@apollo/client"
 import {
 	useTheme,
@@ -26,7 +26,6 @@ import {
 } from "@mui/material"
 import { ChevronLeft, ChevronRight } from "@mui/icons-material"
 import { CompetitionDates, CompetitionTimes } from "../../constants/competitions"
-import { SelectInputProps } from "@mui/material/Select/SelectInput"
 
 /** GQL query to get competition rewards between 2 dates. */
 const COMPETITIONS = gql`
@@ -70,16 +69,27 @@ interface CompetitionPrize {
 	points: number
 }
 
+/** Props for <CalendarDate>. */
+interface Props {
+	onDayChange: (d: number) => void
+}
+
 /**
  * Displays the current in calendar style design.
  */
-export const CalendarDate = () => {
+export const CalendarDate = (props: Props) => {
+	const { onDayChange } = props
+
 	const theme = useTheme()
-	const [day, setDay] = useState(0)
+	const [day, setDay] = useState(CompetitionDates.findIndex((t) => t.from > new Date()))
 	const [showSchedule, setShowSchedule] = useState(false)
 
 	const prevDayClickHandler = useCallback(() => setDay((prev) => Math.max(prev - 1, 0)), [])
 	const nextDayClickHandler = useCallback(() => setDay((prev) => Math.min(prev + 1, CompetitionDates.length - 1)), [])
+
+	useEffect(() => {
+		onDayChange(day)
+	}, [day, onDayChange])
 
 	return (
 		<>
@@ -149,9 +159,6 @@ const BlitzScheduleDialog = (props: BlitzScheduleDialogProps) => {
 			return
 		}
 		setDay(defaultDay)
-		return () => {
-			setDay(defaultDay)
-		}
 	}, [show, defaultDay])
 
 	useEffect(() => {
@@ -170,7 +177,7 @@ const BlitzScheduleDialog = (props: BlitzScheduleDialogProps) => {
 		<Dialog open={show} onClose={props.onClose}>
 			<DialogTitle>Blitz Schedule</DialogTitle>
 			<DialogContent>
-				<Box sx={{ display: "flex", alignItems: "center" }}>
+				<Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
 					<Typography sx={{ mr: 1 }}>Day: </Typography>
 					<Select
 						value={`${day}`}
@@ -191,11 +198,14 @@ const BlitzScheduleDialog = (props: BlitzScheduleDialogProps) => {
 				</Box>
 
 				{error && <Alert severity={"error"}>Oh Folly, Silje broke stats wah...</Alert>}
+				<Typography variant={"body2"} gutterBottom>
+					Points are awarded for: Most Races, Points, Highest Speed and Accuracy.
+				</Typography>
 				<TableContainer
 					sx={{
 						maxHeight: "600px",
-						overflowY: "auto",
-						borderRadius: "8px",
+						overflowY: "scroll",
+						border: `1px solid #aaa`,
 						mt: 2,
 						"& .MuiTableCell-root": {
 							textAlign: "center",
@@ -212,7 +222,7 @@ const BlitzScheduleDialog = (props: BlitzScheduleDialogProps) => {
 						},
 					}}
 				>
-					<Table>
+					<Table stickyHeader>
 						<TableHead>
 							<TableRow>
 								<TableCell>Time</TableCell>
@@ -263,6 +273,7 @@ const BlitzScheduleDialog = (props: BlitzScheduleDialogProps) => {
 						</TableBody>
 					</Table>
 				</TableContainer>
+				<Typography variant={"caption"}>Scroll through the table to view all the times.</Typography>
 			</DialogContent>
 			<DialogActions sx={{ justifyContent: "flex-end" }}>
 				<Button type={"button"} variant={"contained"} color={"primary"} onClick={props.onClose}>
