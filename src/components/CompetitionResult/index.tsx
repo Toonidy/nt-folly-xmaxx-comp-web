@@ -203,7 +203,7 @@ export const CompetitionResult = () => {
 
 			const getReloadTimeout = () => {
 				const now = new Date()
-				const nextTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), Math.floor(now.getMinutes() / 10) * 10 + 11, 0, 0)
+				const nextTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), Math.floor(now.getMinutes() / 10) * 10 + 11, 30, 0)
 				return nextTime.getTime() - now.getTime()
 			}
 
