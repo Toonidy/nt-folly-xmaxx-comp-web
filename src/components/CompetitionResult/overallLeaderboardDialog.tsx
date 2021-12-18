@@ -1,3 +1,4 @@
+import dayjs from "dayjs"
 import { useEffect } from "react"
 import { gql, useLazyQuery } from "@apollo/client"
 import {
@@ -6,6 +7,7 @@ import {
 	DialogContent,
 	DialogActions,
 	Box,
+	Typography,
 	Button,
 	Alert,
 	Paper,
@@ -19,7 +21,7 @@ import {
 	TableBody,
 } from "@mui/material"
 import { getRankText } from "../../utils/text"
-import { CompetitionDates } from "../../constants/competitions"
+import { CompetitionDates, MainCompetitionRange } from "../../constants/competitions"
 import NTGoldIcon from "../../assets/images/nt-gold-icon.png"
 
 /** GQL query to fetch all comp users. */
@@ -93,7 +95,12 @@ export const OverallLeaderboardDialog = (props: Props) => {
 
 	return (
 		<Dialog open={show} onClose={onClose}>
-			<DialogTitle>Xmaxx 2021 Leaderboard</DialogTitle>
+			<DialogTitle>
+				Xmaxx 2021 Leaderboard
+				<Typography variant={"body2"}>
+					{dayjs(MainCompetitionRange.from).format("DD MMM YYYY hh:mm A")} to {dayjs(MainCompetitionRange.to).format("DD MMM YYYY hh:mm A")}
+				</Typography>
+			</DialogTitle>
 			<DialogContent>
 				{error && <Alert severity={"error"}>Oh Folly, stats broken... wah.</Alert>}
 				{!error && (

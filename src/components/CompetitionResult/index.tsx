@@ -529,8 +529,8 @@ const DailyLeaderboardDialog = (props: DailyLeaderboardDialogProps) => {
 		<Dialog open={show} onClose={onClose}>
 			<DialogTitle>
 				Daily Leaderboard
-				<Typography>
-					{dayjs(startAt).format("DD MMM YYYY")} to {dayjs(finishAt).format("DD MMM YYYY")}
+				<Typography variant={"body2"}>
+					{dayjs(startAt).format("DD MMM YYYY hh:mm A")} to {dayjs(finishAt).format("DD MMM YYYY hh:mm A")}
 				</Typography>
 			</DialogTitle>
 			<DialogContent>
