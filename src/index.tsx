@@ -1,5 +1,6 @@
 import React from "react"
 import ReactDOM from "react-dom"
+import ReactGA from "react-ga"
 import { BrowserRouter } from "react-router-dom"
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client"
 import { CssBaseline } from "@mui/material"
@@ -7,6 +8,11 @@ import { ThemeProvider } from "@mui/material/styles"
 import { App } from "./App"
 import { MainTheme } from "./theme"
 import reportWebVitals from "./reportWebVitals"
+
+if (process.env.NODE_ENV === "production") {
+	ReactGA.initialize("G-5STKYBBJ0M")
+	ReactGA.pageview(window.location.pathname + window.location.search)
+}
 
 // Setup GraphQL Client
 const client = new ApolloClient({
