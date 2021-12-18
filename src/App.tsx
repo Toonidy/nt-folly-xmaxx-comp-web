@@ -1,6 +1,6 @@
 import dayjs from "dayjs"
 import Snowfall from "react-snowfall"
-import { useTheme, Box, Paper, Container, Typography, Link } from "@mui/material"
+import { useTheme, Box, Paper, Container, Typography, Link, Grid, Button } from "@mui/material"
 import { Logo } from "./components/PageHeader/logo"
 import { PrizeInfo } from "./components/PageHeader/prizeInfo"
 import { NTCashIcon } from "./components/Icon/ntCash"
@@ -103,27 +103,242 @@ export const App = () => {
 								</Typography>
 							</ul>
 						</Box>
+
+						{/* Credits Section */}
+						<Box component={"section"} sx={{ p: 2, backgroundColor: "#3e6791", color: "#fff" }}>
+							<Typography
+								variant={"h2"}
+								sx={{
+									fontFamily: "Rajdhani, sans-serif",
+									fontWeight: 600,
+									textAlign: "center",
+								}}
+							>
+								Thank You!
+							</Typography>
+							<Typography sx={{ color: "#ddd", textAlign: "center", mb: 2 }}>For making this comp possible.</Typography>
+							<Grid container spacing={2}>
+								<Grid item xs={4}>
+									<Paper elevation={0} sx={{ p: 2, backgroundColor: "rgba(0, 0, 0, 0.2)", color: "#ddd", height: "100%" }}>
+										<Typography
+											variant={"h5"}
+											component={"h3"}
+											sx={{
+												fontFamily: "Rajdhani, sans-serif",
+												fontWeight: 600,
+												mb: 2,
+												color: "#eee",
+												textTransform: "uppercase",
+												textAlign: "center",
+											}}
+										>
+											Nitro Type Community
+										</Typography>
+										<Typography variant={"body2"}>I would also like to thank the following:</Typography>
+										<ul>
+											<Typography component={"li"} variant={"body2"} gutterBottom>
+												<strong>
+													<Link
+														href={"https://www.nitrotype.com/racer/agentgarbo"}
+														color={"#ddd"}
+														target={"_blank"}
+														rel={"external noreferrer"}
+													>
+														agentgarbo
+													</Link>
+												</strong>{" "}
+												for helping this team behind the scenes. The competition format would not had been thought of thanks to learning
+												more about <em>Team Stats</em> refresh times.
+											</Typography>
+											<Typography component={"li"} variant={"body2"} gutterBottom>
+												{"Various donators including: "}
+												<strong>
+													<Link
+														href={"https://www.nitrotype.com/racer/gorniak"}
+														color={"#ddd"}
+														target={"_blank"}
+														rel={"external noreferrer"}
+													>
+														gorniak
+													</Link>
+												</strong>
+												{" and "}
+												<strong>
+													<Link
+														href={"https://www.nitrotype.com/racer/rookieofro"}
+														color={"#ddd"}
+														target={"_blank"}
+														rel={"external noreferrer"}
+													>
+														Merry Christmas
+													</Link>
+												</strong>
+											</Typography>
+											<Typography component={"li"} variant={"body2"} gutterBottom>
+												<strong>
+													<Link
+														href={"https://www.nitrotype.com/racer/margesimpson07"}
+														color={"#ddd"}
+														target={"_blank"}
+														rel={"external noreferrer"}
+													>
+														ack!
+													</Link>
+												</strong>
+												{" for helping keep this team active!"}
+											</Typography>
+											<Typography component={"li"} variant={"body2"} gutterBottom>
+												Our loyal members at <em>Folly Times</em>
+											</Typography>
+											<Typography component={"li"} variant={"body2"}>
+												Mostly... <strong>Nitro Type</strong> for making a fun typing game experience!
+											</Typography>
+										</ul>
+									</Paper>
+								</Grid>
+								<Grid item xs={4}>
+									<Paper elevation={0} sx={{ p: 2, backgroundColor: "rgba(0, 0, 0, 0.2)", color: "#ddd", height: "100%" }}>
+										<Typography
+											variant={"h5"}
+											component={"h3"}
+											sx={{
+												fontFamily: "Rajdhani, sans-serif",
+												fontWeight: 600,
+												mb: 2,
+												color: "#eee",
+												textTransform: "uppercase",
+												textAlign: "center",
+											}}
+										>
+											Resources
+										</Typography>
+										<Typography variant={"body2"}>The following was used for this web page:</Typography>
+										<ul>
+											<Typography component={"li"} variant={"body2"} gutterBottom>
+												<Link href={"https://reactjs.org/"} color={"#ddd"} target={"_blank"} rel={"external noreferrer"}>
+													React JS
+												</Link>{" "}
+											</Typography>
+											<Typography component={"li"} variant={"body2"} gutterBottom>
+												<Link href={"https://mui.com/"} color={"#ddd"} target={"_blank"} rel={"external noreferrer"}>
+													Material UI v5
+												</Link>
+											</Typography>
+											<Typography component={"li"} variant={"body2"} gutterBottom>
+												{"The awesome "}
+												<Link
+													href={"https://www.npmjs.com/package/react-snowfall"}
+													color={"#ddd"}
+													target={"_blank"}
+													rel={"external noreferrer"}
+												>
+													react-snowfall
+												</Link>{" "}
+												NPM package for ReactJS
+											</Typography>
+											<Typography component={"li"} variant={"body2"} gutterBottom>
+												<Link
+													href={"https://www.pexels.com/photo/close-up-of-christmas-decoration-hanging-on-tree-250177/"}
+													color={"#ddd"}
+													target={"_blank"}
+													rel={"external noreferrer"}
+												>
+													Cool Christmas Tree Photo! by <strong>Gary Spears</strong> from <strong>Pexels</strong>
+												</Link>
+											</Typography>
+										</ul>
+									</Paper>
+								</Grid>
+								<Grid item xs={4}>
+									<Paper elevation={0} sx={{ p: 2, backgroundColor: "rgba(0, 0, 0, 0.2)", color: "#ddd", height: "100%" }}>
+										<Typography
+											variant={"h5"}
+											component={"h3"}
+											sx={{
+												fontFamily: "Rajdhani, sans-serif",
+												fontWeight: 600,
+												mb: 2,
+												color: "#eee",
+												textTransform: "uppercase",
+												textAlign: "center",
+											}}
+										>
+											And you, the Visitor!
+										</Typography>
+										<Typography variant={"body2"} sx={{ mb: 2 }}>
+											Want to join our <em>Fun</em> and <em>Rewarding</em> team with <em>Daily Competitions</em>? Visit our{" "}
+											<strong>Nitro Type Team</strong> page!
+										</Typography>
+										<Typography variant={"body2"} sx={{ mb: 2 }}>
+											Join and Leave anytime! All I ask is for you to do at least <em>25 races</em> and have a <em>Folly Time</em>!
+										</Typography>
+										<Typography variant={"body2"} sx={{ textAlign: "right", mb: 2 }}>
+											<Link href={"https://www.nitrotype.com/racer/follycakes"} target={"_blank"} color={"#ddd"}>
+												- Silje P. Entidy
+											</Link>
+										</Typography>
+										<Box sx={{ display: "flex" }}>
+											<Button
+												component={"a"}
+												href={"https://www.nitrotype.com/team/FOLLY"}
+												target={"_blank"}
+												rel={"external noreferrer"}
+												variant={"contained"}
+												color={"error"}
+												sx={{
+													m: "0 auto",
+													width: "50%",
+													maxWidth: "200px",
+												}}
+											>
+												Join Now!
+											</Button>
+										</Box>
+									</Paper>
+								</Grid>
+							</Grid>
+						</Box>
 					</main>
 					{/* Footer */}
-					<Typography
+					<Box
 						component={"footer"}
-						variant={"body2"}
 						sx={{
-							position: "relative",
-							mt: 4,
+							display: "flex",
+							justifyContent: "space-between",
+							alignItems: "center",
 							p: 2,
 							borderBottomLeftRadius: "14px",
 							borderBottomRightRadius: "14px",
 							backgroundColor: theme.palette.grey[800],
-							color: theme.palette.getContrastText(theme.palette.background.default),
-							textAlign: "center",
 						}}
 					>
-						Copyright &copy; {new Date().getFullYear()}{" "}
-						<Link href={"https://folly.team/"} sx={{ fontWeight: 600, color: "#eee" }}>
-							Folly Times
+						<Typography
+							variant={"body2"}
+							sx={{
+								position: "relative",
+								color: theme.palette.getContrastText(theme.palette.background.default),
+							}}
+						>
+							Copyright &copy; {new Date().getFullYear()}{" "}
+							<Link href={"https://folly.team/"} sx={{ fontWeight: 600, color: "#eee" }}>
+								Folly Times
+							</Link>
+						</Typography>
+						<Link
+							href={"https://www.nitrotype.com/"}
+							underline={"none"}
+							target={"_blank"}
+							rel={"external noreferrer"}
+							color={"#eee"}
+							title={"Visit Nitro Type to Learn to Type and have Fun!"}
+							sx={{ display: "flex", alignItems: "center" }}
+						>
+							<img src={"/nt-16x16.png"} alt={"Nitro Type Logo"} />
+							<Typography component={"span"} variant={"body2"} sx={{ ml: "1ch" }}>
+								Visit Nitro Type
+							</Typography>
 						</Link>
-					</Typography>
+					</Box>
 				</Paper>
 			</Container>
 		</Box>
