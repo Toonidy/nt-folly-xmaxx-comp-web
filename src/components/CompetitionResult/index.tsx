@@ -464,24 +464,32 @@ export const CompetitionResult = () => {
 												)}
 
 												{!loading && currentComp?.grindRewards[i] && (
-													<TableCell>{currentComp.multiplier * currentComp.grindRewards[i].points} points</TableCell>
+													<TableCell sx={{ fontWeight: 300 }}>
+														{currentComp.multiplier * currentComp.grindRewards[i].points} points
+													</TableCell>
 												)}
-												{!loading && !currentComp?.grindRewards[i] && <TableCell>???</TableCell>}
+												{!loading && !currentComp?.grindRewards[i] && <TableCell sx={{ fontWeight: 300 }}>???</TableCell>}
 
 												{!loading && currentComp?.accuracyRewards[i] && (
-													<TableCell>{currentComp.multiplier * currentComp.accuracyRewards[i].points} points</TableCell>
+													<TableCell sx={{ fontWeight: 300 }}>
+														{currentComp.multiplier * currentComp.accuracyRewards[i].points} points
+													</TableCell>
 												)}
-												{!loading && !currentComp?.accuracyRewards[i] && <TableCell>???</TableCell>}
+												{!loading && !currentComp?.accuracyRewards[i] && <TableCell sx={{ fontWeight: 300 }}>???</TableCell>}
 
 												{!loading && currentComp?.speedRewards[i] && (
-													<TableCell>{currentComp.multiplier * currentComp.speedRewards[i].points} points</TableCell>
+													<TableCell sx={{ fontWeight: 300 }}>
+														{currentComp.multiplier * currentComp.speedRewards[i].points} points
+													</TableCell>
 												)}
-												{!loading && !currentComp?.speedRewards[i] && <TableCell>???</TableCell>}
+												{!loading && !currentComp?.speedRewards[i] && <TableCell sx={{ fontWeight: 300 }}>???</TableCell>}
 
 												{!loading && currentComp?.pointRewards[i] && (
-													<TableCell>{currentComp.multiplier * currentComp.pointRewards[i].points} points</TableCell>
+													<TableCell sx={{ fontWeight: 300 }}>
+														{currentComp.multiplier * currentComp.pointRewards[i].points} points
+													</TableCell>
 												)}
-												{!loading && !currentComp?.pointRewards[i] && <TableCell>???</TableCell>}
+												{!loading && !currentComp?.pointRewards[i] && <TableCell sx={{ fontWeight: 300 }}>???</TableCell>}
 											</TableRow>
 										))}
 									</TableBody>
