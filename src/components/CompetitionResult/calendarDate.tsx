@@ -128,7 +128,7 @@ export const CalendarDate = (props: Props) => {
 						</IconButton>
 						<Typography sx={{ flexGrow: 1, fontSize: theme.typography.pxToRem(32), fontWeight: 600 }}>{day + 1}</Typography>
 						<IconButton disabled={day === CompetitionDates.length - 1} onClick={nextDayClickHandler}>
-							<Tooltip title={"Go to the previous day."}>
+							<Tooltip title={"Go to the next day."}>
 								<ChevronRight />
 							</Tooltip>
 						</IconButton>
@@ -137,7 +137,7 @@ export const CalendarDate = (props: Props) => {
 				</Box>
 			</Paper>
 			<Button type={"button"} variant={"contained"} color={"primary"} startIcon={<EventNote />} onClick={() => setShowSchedule(true)} sx={{ mt: 2 }}>
-				View Blitzes
+				Blitzes
 			</Button>
 
 			<BlitzScheduleDialog show={showSchedule} defaultDay={day} onClose={() => setShowSchedule(false)} />

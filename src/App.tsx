@@ -59,8 +59,11 @@ export const App = () => {
 								</Typography>
 							</ul>
 							<Typography gutterBottom>
-								Every day at 9:30AM EST <small>({dayjs(new Date(MainCompetitionRange.from)).format("hh:mm A")} your local time)</small>, the
-								player wih most collected points within the day will win <NTCashIcon />
+								Every day at 9:30AM EST{" "}
+								<small>
+									({dayjs(new Date(MainCompetitionRange.from)).format("hh:mm A")} {Intl.DateTimeFormat().resolvedOptions().timeZone})
+								</small>
+								, the player wih most collected points within the day will win <NTCashIcon />
 								{" 15 million!"}
 							</Typography>
 							<Typography gutterBottom>
@@ -71,7 +74,9 @@ export const App = () => {
 							</Typography>
 							<ol>
 								<Typography component={"li"}>All prizes are given at the end of the competition</Typography>
-								<Typography component={"li"}>Should you leave the team, you are disqualified and cannot enter again</Typography>
+								<Typography component={"li"}>
+									Should you leave the team during the competition period, you are disqualified and cannot enter again
+								</Typography>
 								<Typography component={"li"}>If you are kicked from the team, you are disqualified and cannot enter again</Typography>
 								<Typography component={"li"}>
 									In result of tie during the <em>10 minute blitz</em>, winners involved will claim the points

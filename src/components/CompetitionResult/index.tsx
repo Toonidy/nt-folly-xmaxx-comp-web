@@ -15,6 +15,7 @@ import {
 	TableCell,
 	TableBody,
 	CircularProgress,
+	Alert,
 	Button,
 	Dialog,
 	DialogTitle,
@@ -24,6 +25,8 @@ import {
 import { AccessTime, EmojiEvents } from "@mui/icons-material"
 import { CalendarDate } from "./calendarDate"
 import { CompCountdownChip } from "./compCountdownChip"
+import { OverallLeaderboardDialog } from "./overallLeaderboardDialog"
+import { getRankText } from "../../utils/text"
 import { CompetitionDates } from "../../constants/competitions"
 
 /** Ranks List for iterating purposes. */
@@ -125,6 +128,7 @@ export const CompetitionResult = () => {
 	const now = new Date()
 
 	const [showDailyLeaderboard, setShowDailyLeaderboard] = useState(false)
+	const [showOverallLeaderboard, setShowOverallLeaderboard] = useState(false)
 	const [day, setDay] = useState(() => {
 		const result = CompetitionDates.findIndex((t) => t.from <= now && t.to > now)
 		if (result === -1) {
@@ -133,7 +137,7 @@ export const CompetitionResult = () => {
 		return result
 	})
 
-	const [loadCompetitions, { data, loading }] = useLazyQuery<{ competitions: Competition[] }>(COMPETITIONS)
+	const [loadCompetitions, { data, loading, error }] = useLazyQuery<{ competitions: Competition[] }>(COMPETITIONS)
 
 	let currentComp = data?.competitions?.find((c) => new Date(c.startAt) <= now && new Date(c.finishAt) > now)
 	if (!currentComp && data?.competitions && data.competitions.length > 0) {
@@ -235,8 +239,18 @@ export const CompetitionResult = () => {
 					px: 2,
 				}}
 			>
-				<Box sx={{ mr: 4 }}>
+				<Box sx={{ display: "flex", flexDirection: "column", mr: 4 }}>
 					<CalendarDate onDayChange={(d) => setDay(d)} />
+					<Button
+						type={"button"}
+						variant={"contained"}
+						color={"secondary"}
+						startIcon={<EmojiEvents />}
+						onClick={() => setShowOverallLeaderboard(true)}
+						sx={{ mt: 1 }}
+					>
+						Leaderboard
+					</Button>
 				</Box>
 				<Box
 					sx={{
@@ -328,6 +342,7 @@ export const CompetitionResult = () => {
 									</TableBody>
 								</Table>
 							</TableContainer>
+							{error && <Alert severity={"error"}>Oh Folly, Stats Broken wah...</Alert>}
 							{!loading && CompetitionDates[day].from <= now && leaderboard.length > 0 && (
 								<Button
 									type={"button"}
@@ -352,7 +367,6 @@ export const CompetitionResult = () => {
 										sx={{
 											fontFamily: "Rajdhani,sans-serif",
 											fontWeight: 500,
-											fontStyle: "italic",
 											letterSpacing: "1px",
 										}}
 									>
@@ -362,9 +376,12 @@ export const CompetitionResult = () => {
 										<AccessTime sx={{ mr: "1ch" }} />
 										{!currentComp && <Skeleton variant={"rectangular"} sx={{ bgcolor: "grey.400" }} />}
 										{currentComp && (
-											<span>{` ${dayjs(currentComp.startAt).subtract(1, "m").format("hh:mm A")} - ${dayjs(currentComp.finishAt)
-												.subtract(1, "m")
-												.format("hh:mm A")}`}</span>
+											<>
+												<Box component={"span"} sx={{ mr: "1ch" }}>{` ${dayjs(currentComp.startAt)
+													.subtract(1, "m")
+													.format("hh:mm A")} - ${dayjs(currentComp.finishAt).subtract(1, "m").format("hh:mm A")}`}</Box>
+												<small>({Intl.DateTimeFormat().resolvedOptions().timeZone})</small>
+											</>
 										)}
 									</Typography>
 								</div>
@@ -464,6 +481,7 @@ export const CompetitionResult = () => {
 				leaderboard={leaderboard}
 				onClose={() => setShowDailyLeaderboard(false)}
 			/>
+			<OverallLeaderboardDialog show={showOverallLeaderboard} onClose={() => setShowOverallLeaderboard(false)} />
 		</Box>
 	)
 }
@@ -546,19 +564,4 @@ const getMultiplierBackgroundColor = (m: number) => {
 			return "radial-gradient(#ea8d23, #78371d)"
 	}
 	return undefined
-}
-
-const getRankText = (i: number) => {
-	var j = i % 10,
-		k = i % 100
-	if (j === 1 && k !== 11) {
-		return i + "st"
-	}
-	if (j === 2 && k !== 12) {
-		return i + "nd"
-	}
-	if (j === 3 && k !== 13) {
-		return i + "rd"
-	}
-	return i + "th"
 }
