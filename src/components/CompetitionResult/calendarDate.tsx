@@ -81,7 +81,14 @@ export const CalendarDate = (props: Props) => {
 	const { onDayChange } = props
 
 	const theme = useTheme()
-	const [day, setDay] = useState(CompetitionDates.findIndex((t) => t.from > new Date()))
+	const [day, setDay] = useState(() => {
+		const now = new Date()
+		const result = CompetitionDates.findIndex((t) => t.from <= now && t.to > now)
+		if (result === -1) {
+			return 0
+		}
+		return result
+	})
 	const [showSchedule, setShowSchedule] = useState(false)
 
 	const prevDayClickHandler = useCallback(() => setDay((prev) => Math.max(prev - 1, 0)), [])

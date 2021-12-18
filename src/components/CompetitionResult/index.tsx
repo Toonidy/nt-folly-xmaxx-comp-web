@@ -1,7 +1,7 @@
 import dayjs from "dayjs"
 import { useState, useEffect } from "react"
 import { gql, useLazyQuery } from "@apollo/client"
-import { useTheme, Box, Paper, Typography, Skeleton, TableContainer, Table, TableHead, TableRow, TableCell, TableBody } from "@mui/material"
+import { useTheme, Box, Paper, Typography, Link, Skeleton, TableContainer, Table, TableHead, TableRow, TableCell, TableBody } from "@mui/material"
 import { AccessTime } from "@mui/icons-material"
 import { CalendarDate } from "./calendarDate"
 import { CompCountdownChip } from "./compCountdownChip"
@@ -20,11 +20,10 @@ const COMPETITIONS = gql`
 			finishAt
 			leaderboard {
 				id
-				speedScore
-				accuracyScore
-				grindScore
-				pointScore
-				grindRank
+				speedReward
+				accuracyReward
+				grindReward
+				pointReward
 				user {
 					id
 					username
@@ -81,16 +80,22 @@ enum UserStatus {
 /** Competition User gql obj. */
 interface CompetitionUser {
 	id: string
-	speedScore: number
-	accuracyScore: number
-	grindScore: number
-	pointScore: number
-	grindRank: number
+	speedReward: number
+	accuracyReward: number
+	grindReward: number
+	pointReward: number
 	user: {
 		username: string
 		displayName: string
 		status: UserStatus
 	}
+}
+
+/** Leaderboard Table Record Data. */
+interface LeaderboardEntry {
+	username: string
+	displayName: string
+	totalPoints: number
 }
 
 /**
@@ -99,28 +104,51 @@ interface CompetitionUser {
 export const CompetitionResult = () => {
 	const theme = useTheme()
 	const now = new Date()
-	const [day, setDay] = useState(CompetitionDates.findIndex((t) => t.from > now))
+	const [day, setDay] = useState(() => {
+		const result = CompetitionDates.findIndex((t) => t.from <= now && t.to > now)
+		if (result === -1) {
+			return 0
+		}
+		return result
+	})
 
 	const [loadCompetitions, { data, loading }] = useLazyQuery<{ competitions: Competition[] }>(COMPETITIONS)
 
-	const currentComp =
-		data &&
-		data.competitions &&
-		data.competitions.find((c) => {
-			return new Date(c.startAt) > now
-		})
-	const leaderboard = currentComp
-		? currentComp.leaderboard
-				.filter((r) => r.accuracyScore + r.grindScore + r.speedScore + r.pointScore > 0)
-				.map((r) => {
-					return {
-						username: r.user.username,
-						displayName: r.user.displayName,
-						grindRank: r.grindRank,
-						total: r.accuracyScore + r.grindScore + r.speedScore + r.pointScore,
-					}
-				})
-		: []
+	let currentComp = data?.competitions?.find((c) => new Date(c.startAt) <= now && new Date(c.finishAt) > now)
+	if (!currentComp && data?.competitions && data.competitions.length > 0) {
+		currentComp = data.competitions[0]
+	}
+
+	let leaderboard: LeaderboardEntry[] = []
+
+	if (data?.competitions && data.competitions.length > 0) {
+		data.competitions
+			.filter((c) => new Date(c.finishAt) < now)
+			.forEach((c) => {
+				c.leaderboard
+					.filter((r) => r.accuracyReward + r.grindReward + r.speedReward + r.pointReward > 0)
+					.forEach((r) => {
+						for (let i = 0; i < leaderboard.length; i++) {
+							if (leaderboard[i].username === r.user.username) {
+								leaderboard[i].totalPoints += r.accuracyReward + r.grindReward + r.speedReward + r.pointReward
+								return
+							}
+						}
+						leaderboard = leaderboard.concat({
+							username: r.user.username,
+							displayName: r.user.displayName,
+							totalPoints: r.accuracyReward + r.grindReward + r.speedReward + r.pointReward,
+						})
+					})
+			})
+	}
+
+	leaderboard.sort((a, b) => {
+		if (a.totalPoints === b.totalPoints) {
+			return 0
+		}
+		return a.totalPoints > b.totalPoints ? -1 : 1
+	})
 
 	useEffect(() => {
 		loadCompetitions({
@@ -201,19 +229,41 @@ export const CompetitionResult = () => {
 												<TableCell colSpan={3}>This competition has not started.</TableCell>
 											</TableRow>
 										)}
-										{!loading && CompetitionDates[day].from < now && leaderboard.length === 0 && (
+										{!loading && CompetitionDates[day].from <= now && leaderboard.length === 0 && (
 											<TableRow>
 												<TableCell colSpan={3}>No results yet wah...</TableCell>
 											</TableRow>
 										)}
-
-										{/* {RANKS.map((r, i) => (
-											<TableRow key={`current-blitz-info-lb-rank-${i}`}>
-												<TableCell>{r}</TableCell>
-												<TableCell>Test Cakes</TableCell>
-												<TableCell>{leaderboard[i]} Points</TableCell>
-											</TableRow>
-										))} */}
+										{!loading &&
+											CompetitionDates[day].from <= now &&
+											RANKS.map((r, i) => {
+												if (!leaderboard[i]) {
+													return (
+														<TableRow key={`current-blitz-info-lb-rank-${i}`}>
+															<TableCell>{r}</TableCell>
+															<TableCell colSpan={2}>
+																<em>N/A</em>
+															</TableCell>
+														</TableRow>
+													)
+												}
+												return (
+													<TableRow key={`current-blitz-info-lb-rank-${i}`}>
+														<TableCell>{r}</TableCell>
+														<TableCell>
+															<Link
+																href={`https://www.nitrotype.com/racer/${leaderboard[i].username}`}
+																target={"_blank"}
+																rel={"external noreferrer"}
+																color={"#222"}
+															>
+																<strong>{leaderboard[i].displayName}</strong>
+															</Link>
+														</TableCell>
+														<TableCell>{leaderboard[i].totalPoints} Points</TableCell>
+													</TableRow>
+												)
+											})}
 									</TableBody>
 								</Table>
 							</TableContainer>

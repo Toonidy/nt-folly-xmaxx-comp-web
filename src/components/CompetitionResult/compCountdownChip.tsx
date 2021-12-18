@@ -15,12 +15,17 @@ interface Props {
  * Displays Comp Countdown chip.
  */
 export const CompCountdownChip = (props: Props) => {
-	const comp = CompetitionDates[props.day]
+	const { day } = props
+	const comp = CompetitionDates[day]
 	const [status, setStatus] = useState(generateCompCountdownStatus(comp))
 
 	useEffect(() => {
 		const now = new Date()
-		if (!comp || now > comp.to) {
+		if (!comp) {
+			return
+		}
+		setStatus(generateCompCountdownStatus(comp))
+		if (now > comp.to) {
 			return
 		}
 		const t = setInterval(() => setStatus(generateCompCountdownStatus(comp)), 6000)
@@ -49,9 +54,9 @@ export const CompCountdownChip = (props: Props) => {
 const generateCompCountdownStatus = (comp: DateRange) => {
 	const now = new Date()
 	if (now < comp.from) {
-		return `Starts in ${dayjs(comp.from).fromNow()}`
+		return `Starts ${dayjs(comp.from).fromNow()}`
 	} else if (now < comp.to) {
-		return `Ends in ${dayjs(comp.to).fromNow()}`
+		return `Ends ${dayjs(comp.to).fromNow()}`
 	}
 	return "Ended"
 }
