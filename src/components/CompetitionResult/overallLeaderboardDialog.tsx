@@ -81,7 +81,7 @@ export const OverallLeaderboardDialog = (props: Props) => {
 			return
 		}
 		loadLeaderboard()
-	}, [show])
+	}, [show, loadLeaderboard])
 
 	const leaderboard = data?.users.filter((u) => u.status !== UserStatus.DISQUALIFIED && u.totalPoints > 0) || []
 	leaderboard.sort((a, b) => {
