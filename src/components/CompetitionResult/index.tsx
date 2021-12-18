@@ -186,8 +186,6 @@ export const CompetitionResult = () => {
 		return a.totalPoints > b.totalPoints ? -1 : 1
 	})
 
-	console.debug("Leaderboard Re-render?", JSON.stringify(leaderboard))
-
 	useEffect(() => {
 		loadCompetitions({
 			variables: {
