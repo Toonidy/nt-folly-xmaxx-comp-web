@@ -22,7 +22,7 @@ export const CompetitionTimer = () => {
 			<Typography
 				sx={{
 					fontFamily: "Rajdhani, sans-serif",
-					fontWeight: 600,
+					fontWeight: 500,
 					fontSize: theme.typography.pxToRem(24),
 					textAlign: "center",
 				}}

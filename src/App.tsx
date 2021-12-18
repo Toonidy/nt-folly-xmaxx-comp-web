@@ -136,9 +136,11 @@ export const App = () => {
 										>
 											Nitro Type Community
 										</Typography>
-										<Typography variant={"body2"}>I would also like to thank the following:</Typography>
+										<Typography variant={"body2"} sx={{ fontWeight: 300 }}>
+											I would also like to thank the following:
+										</Typography>
 										<ul>
-											<Typography component={"li"} variant={"body2"} gutterBottom>
+											<Typography component={"li"} variant={"body2"} gutterBottom sx={{ fontWeight: 300 }}>
 												<strong>
 													<Link
 														href={"https://www.nitrotype.com/racer/agentgarbo"}
@@ -152,7 +154,7 @@ export const App = () => {
 												for helping this team behind the scenes. The competition format would not had been thought of thanks to learning
 												more about <em>Team Stats</em> refresh times.
 											</Typography>
-											<Typography component={"li"} variant={"body2"} gutterBottom>
+											<Typography component={"li"} variant={"body2"} gutterBottom sx={{ fontWeight: 300 }}>
 												{"Various donators including: "}
 												<strong>
 													<Link
@@ -176,7 +178,7 @@ export const App = () => {
 													</Link>
 												</strong>
 											</Typography>
-											<Typography component={"li"} variant={"body2"} gutterBottom>
+											<Typography component={"li"} variant={"body2"} gutterBottom sx={{ fontWeight: 300 }}>
 												<strong>
 													<Link
 														href={"https://www.nitrotype.com/racer/margesimpson07"}
@@ -189,10 +191,10 @@ export const App = () => {
 												</strong>
 												{" for helping keep this team active!"}
 											</Typography>
-											<Typography component={"li"} variant={"body2"} gutterBottom>
+											<Typography component={"li"} variant={"body2"} gutterBottom sx={{ fontWeight: 300 }}>
 												Our loyal members at <em>Folly Times</em>
 											</Typography>
-											<Typography component={"li"} variant={"body2"}>
+											<Typography component={"li"} variant={"body2"} sx={{ fontWeight: 300 }}>
 												Mostly... <strong>Nitro Type</strong> for making a fun typing game experience!
 											</Typography>
 										</ul>
@@ -214,19 +216,21 @@ export const App = () => {
 										>
 											Resources
 										</Typography>
-										<Typography variant={"body2"}>The following was used for this web page:</Typography>
+										<Typography variant={"body2"} sx={{ fontWeight: 300 }}>
+											The following was used for this web page:
+										</Typography>
 										<ul>
 											<Typography component={"li"} variant={"body2"} gutterBottom>
 												<Link href={"https://reactjs.org/"} color={"#ddd"} target={"_blank"} rel={"external noreferrer"}>
-													React JS
+													<strong>React JS</strong>
 												</Link>{" "}
 											</Typography>
 											<Typography component={"li"} variant={"body2"} gutterBottom>
 												<Link href={"https://mui.com/"} color={"#ddd"} target={"_blank"} rel={"external noreferrer"}>
-													Material UI v5
+													<strong>Material UI v5</strong>
 												</Link>
 											</Typography>
-											<Typography component={"li"} variant={"body2"} gutterBottom>
+											<Typography component={"li"} variant={"body2"} gutterBottom sx={{ fontWeight: 300 }}>
 												{"The awesome "}
 												<Link
 													href={"https://www.npmjs.com/package/react-snowfall"}
@@ -234,11 +238,11 @@ export const App = () => {
 													target={"_blank"}
 													rel={"external noreferrer"}
 												>
-													react-snowfall
+													<strong>react-snowfall</strong>
 												</Link>{" "}
 												NPM package for ReactJS
 											</Typography>
-											<Typography component={"li"} variant={"body2"} gutterBottom>
+											<Typography component={"li"} variant={"body2"} gutterBottom sx={{ fontWeight: 300 }}>
 												<Link
 													href={"https://www.pexels.com/photo/close-up-of-christmas-decoration-hanging-on-tree-250177/"}
 													color={"#ddd"}
@@ -267,11 +271,11 @@ export const App = () => {
 										>
 											And you, the Visitor!
 										</Typography>
-										<Typography variant={"body2"} sx={{ mb: 2 }}>
+										<Typography variant={"body2"} sx={{ mb: 2, fontWeight: 300 }}>
 											Want to join our <em>Fun</em> and <em>Rewarding</em> team with <em>Daily Competitions</em>? Visit our{" "}
 											<strong>Nitro Type Team</strong> page!
 										</Typography>
-										<Typography variant={"body2"} sx={{ mb: 2 }}>
+										<Typography variant={"body2"} sx={{ mb: 2, fontWeight: 300 }}>
 											Join and Leave anytime! All I ask is for you to do at least <em>25 races</em> and have a <em>Folly Time</em>!
 										</Typography>
 										<Typography variant={"body2"} sx={{ textAlign: "right", mb: 2 }}>
