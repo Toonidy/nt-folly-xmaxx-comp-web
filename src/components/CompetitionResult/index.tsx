@@ -186,6 +186,8 @@ export const CompetitionResult = () => {
 		return a.totalPoints > b.totalPoints ? -1 : 1
 	})
 
+	console.debug("Leaderboard Re-render?", JSON.stringify(leaderboard))
+
 	useEffect(() => {
 		loadCompetitions({
 			variables: {
@@ -539,7 +541,6 @@ const DailyLeaderboardDialog = (props: DailyLeaderboardDialogProps) => {
 						</TableHead>
 						<TableBody>
 							{leaderboard.map((r, i) => {
-								console.log("WTF", r)
 								return (
 									<TableRow key={`dialog-lb-rank-${i}`}>
 										<TableCell>{getRankText(i + 1)}</TableCell>
