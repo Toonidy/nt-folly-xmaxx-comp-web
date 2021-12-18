@@ -234,7 +234,6 @@ export const CompetitionResult = () => {
 		<Box
 			component={"section"}
 			sx={{
-				mb: 2,
 				backgroundImage: "url(/comp-background.jpg)",
 				backgroundSize: "cover",
 				backgroundRepeat: "no-repeat",

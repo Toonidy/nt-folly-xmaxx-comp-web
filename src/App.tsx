@@ -5,6 +5,7 @@ import { Logo } from "./components/PageHeader/logo"
 import { PrizeInfo } from "./components/PageHeader/prizeInfo"
 import { NTCashIcon } from "./components/Icon/ntCash"
 import { CompetitionResult } from "./components/CompetitionResult"
+import { CompetitionTimer } from "./components/CompetitionTimer"
 import { MainCompetitionRange } from "./constants/competitions"
 
 /**
@@ -38,6 +39,7 @@ export const App = () => {
 					{/* Body */}
 					<main>
 						<CompetitionResult />
+						<CompetitionTimer />
 
 						{/* Comp Info Section */}
 						<Box component={"section"} sx={{ p: 2 }}>
