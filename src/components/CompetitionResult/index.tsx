@@ -28,6 +28,7 @@ import { CompCountdownChip } from "./compCountdownChip"
 import { OverallLeaderboardDialog } from "./overallLeaderboardDialog"
 import { getRankText } from "../../utils/text"
 import { CompetitionDates } from "../../constants/competitions"
+import NTGoldIcon from "../../assets/images/nt-gold-icon.png"
 
 /** Ranks List for iterating purposes. */
 const RANKS = ["🥇 1st", "🥈 2nd", "🥉 3rd", "🎖️ 4th", "🎖️ 5th"]
@@ -51,6 +52,7 @@ const COMPETITIONS = gql`
 					username
 					displayName
 					status
+					membershipType
 				}
 			}
 			grindRewards {
@@ -99,6 +101,12 @@ enum UserStatus {
 	DISQUALIFIED = "DISQUALIFIED",
 }
 
+/** GQL Enum for user statuses. */
+enum MembershipType {
+	BASIC = "BASIC",
+	GOLD = "GOLD",
+}
+
 /** Competition User gql obj. */
 interface CompetitionUser {
 	id: string
@@ -110,6 +118,7 @@ interface CompetitionUser {
 		username: string
 		displayName: string
 		status: UserStatus
+		membershipType: MembershipType
 	}
 }
 
@@ -118,6 +127,7 @@ interface LeaderboardEntry {
 	username: string
 	displayName: string
 	totalPoints: number
+	membershipType: MembershipType
 }
 
 /**
@@ -151,7 +161,7 @@ export const CompetitionResult = () => {
 			.filter((c) => new Date(c.finishAt) < now)
 			.forEach((c) => {
 				c.leaderboard
-					.filter((r) => r.accuracyReward + r.grindReward + r.speedReward + r.pointReward > 0)
+					.filter((r) => r.user.status !== UserStatus.DISQUALIFIED && r.accuracyReward + r.grindReward + r.speedReward + r.pointReward > 0)
 					.forEach((r) => {
 						for (let i = 0; i < leaderboard.length; i++) {
 							if (leaderboard[i].username === r.user.username) {
@@ -162,6 +172,7 @@ export const CompetitionResult = () => {
 						leaderboard = leaderboard.concat({
 							username: r.user.username,
 							displayName: r.user.displayName,
+							membershipType: r.user.membershipType,
 							totalPoints: r.accuracyReward + r.grindReward + r.speedReward + r.pointReward,
 						})
 					})
@@ -332,7 +343,15 @@ export const CompetitionResult = () => {
 																rel={"external noreferrer"}
 																color={"#222"}
 															>
-																<strong>{leaderboard[i].displayName}</strong>
+																{leaderboard[i].membershipType === MembershipType.GOLD && (
+																	<Box
+																		component={"img"}
+																		src={NTGoldIcon}
+																		alt={"Nitro Type Gold Icon"}
+																		sx={{ width: "24px", height: "18px" }}
+																	/>
+																)}
+																<strong>&nbsp;{leaderboard[i].displayName}</strong>
 															</Link>
 														</TableCell>
 														<TableCell>{leaderboard[i].totalPoints} Points</TableCell>
@@ -531,7 +550,15 @@ const DailyLeaderboardDialog = (props: DailyLeaderboardDialogProps) => {
 												rel={"external noreferrer"}
 												color={"#222"}
 											>
-												<strong>{r.displayName}</strong>
+												{r.membershipType === MembershipType.GOLD && (
+													<Box
+														component={"img"}
+														src={NTGoldIcon}
+														alt={"Nitro Type Gold Icon"}
+														sx={{ width: "24px", height: "18px" }}
+													/>
+												)}
+												<strong>&nbsp;{r.displayName}</strong>
 											</Link>
 										</TableCell>
 										<TableCell>{r.totalPoints} Points</TableCell>

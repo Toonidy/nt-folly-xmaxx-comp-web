@@ -137,7 +137,7 @@ export const OverallLeaderboardDialog = (props: Props) => {
 															sx={{ width: "24px", height: "18px" }}
 														/>
 													)}
-													<strong>{u.displayName}</strong>
+													<strong>&nbsp;{u.displayName}</strong>
 												</Link>
 											</TableCell>
 											<TableCell>{u.totalPoints} Points</TableCell>
