@@ -276,13 +276,12 @@ export const CompetitionResult = () => {
 							variant={"h3"}
 							sx={{
 								fontFamily: "Rajdhani,sans-serif",
-								fontWeight: 500,
-								fontStyle: "italic",
+								fontWeight: 600,
 								letterSpacing: "1px",
 							}}
 						>
-							Daily Leaderboard - {dayjs(CompetitionDates[day].from).format("DD MMM YYYY")} to{" "}
-							{dayjs(CompetitionDates[day].to).format("DD MMM YYYY")}
+							Daily Leaderboard - <em>{dayjs(CompetitionDates[day].from).format("DD MMM YYYY")}</em> to{" "}
+							<em>{dayjs(CompetitionDates[day].to).format("DD MMM YYYY")}</em>
 						</Typography>
 						<CompCountdownChip day={day} />
 					</Box>
