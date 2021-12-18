@@ -24,7 +24,7 @@ import {
 	TableBody,
 	Skeleton,
 } from "@mui/material"
-import { ChevronLeft, ChevronRight } from "@mui/icons-material"
+import { ChevronLeft, ChevronRight, EventNote } from "@mui/icons-material"
 import { CompetitionDates, CompetitionTimes } from "../../constants/competitions"
 
 /** GQL query to get competition rewards between 2 dates. */
@@ -136,7 +136,7 @@ export const CalendarDate = (props: Props) => {
 					<Typography variant={"body2"}>{dayjs(CompetitionDates[day].from).format("D MMM YYYY")}</Typography>
 				</Box>
 			</Paper>
-			<Button type={"button"} variant={"contained"} color={"primary"} onClick={() => setShowSchedule(true)} sx={{ mt: 2 }}>
+			<Button type={"button"} variant={"contained"} color={"primary"} startIcon={<EventNote />} onClick={() => setShowSchedule(true)} sx={{ mt: 2 }}>
 				View Blitzes
 			</Button>
 

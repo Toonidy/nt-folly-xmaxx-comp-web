@@ -42,7 +42,7 @@ export const CompCountdownChip = (props: Props) => {
 			label={status}
 			sx={{
 				fontFamily: "Rajdhani,sans-serif",
-				fontWeight: 500,
+				fontWeight: 600,
 			}}
 		/>
 	)

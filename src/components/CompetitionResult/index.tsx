@@ -1,8 +1,27 @@
 import dayjs from "dayjs"
 import { useState, useEffect } from "react"
 import { gql, useLazyQuery } from "@apollo/client"
-import { useTheme, Box, Paper, Typography, Link, Skeleton, TableContainer, Table, TableHead, TableRow, TableCell, TableBody } from "@mui/material"
-import { AccessTime } from "@mui/icons-material"
+import {
+	useTheme,
+	Box,
+	Paper,
+	Typography,
+	Link,
+	Skeleton,
+	TableContainer,
+	Table,
+	TableHead,
+	TableRow,
+	TableCell,
+	TableBody,
+	CircularProgress,
+	Button,
+	Dialog,
+	DialogTitle,
+	DialogContent,
+	DialogActions,
+} from "@mui/material"
+import { AccessTime, EmojiEvents } from "@mui/icons-material"
 import { CalendarDate } from "./calendarDate"
 import { CompCountdownChip } from "./compCountdownChip"
 import { CompetitionDates } from "../../constants/competitions"
@@ -104,6 +123,8 @@ interface LeaderboardEntry {
 export const CompetitionResult = () => {
 	const theme = useTheme()
 	const now = new Date()
+
+	const [showDailyLeaderboard, setShowDailyLeaderboard] = useState(false)
 	const [day, setDay] = useState(() => {
 		const result = CompetitionDates.findIndex((t) => t.from <= now && t.to > now)
 		if (result === -1) {
@@ -157,6 +178,41 @@ export const CompetitionResult = () => {
 				timeTo: CompetitionDates[day].to,
 			},
 		})
+
+		// Add refresh comp reload option
+		const now = new Date()
+		if (CompetitionDates[day].to > now) {
+			let t: NodeJS.Timeout
+
+			const getReloadTimeout = () => {
+				const now = new Date()
+				const nextTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), Math.floor(now.getMinutes() / 10) * 10 + 11, 0, 0)
+				return nextTime.getTime() - now.getTime()
+			}
+
+			const reloadStats = () => {
+				// Check if we need to go to the next day instead
+				const now = new Date()
+				if (CompetitionDates[day].to < now) {
+					// setDay((prev) => Math.min(CompetitionDates.length - 1, prev + 1))
+					return
+				}
+
+				// Reload current comp
+				loadCompetitions({
+					variables: {
+						timeFrom: CompetitionDates[day].from,
+						timeTo: CompetitionDates[day].to,
+					},
+				})
+				t = setTimeout(reloadStats, getReloadTimeout())
+			}
+
+			t = setTimeout(reloadStats, getReloadTimeout())
+			return () => {
+				clearTimeout(t)
+			}
+		}
 	}, [day, loadCompetitions])
 
 	return (
@@ -208,7 +264,7 @@ export const CompetitionResult = () => {
 					</Box>
 
 					<Box sx={{ display: "flex" }}>
-						<Box sx={{ mr: 2, maxWidth: "400px" }}>
+						<Box sx={{ flexGrow: 1, mr: 2 }}>
 							<TableContainer component={Paper}>
 								<Table>
 									<TableHead>
@@ -219,11 +275,15 @@ export const CompetitionResult = () => {
 										</TableRow>
 									</TableHead>
 									<TableBody>
-										{loading && (
-											<TableRow>
-												<TableCell colSpan={3}>Loading...</TableCell>
-											</TableRow>
-										)}
+										{loading &&
+											RANKS.map((r, i) => (
+												<TableRow key={`current-blitz-info-lb-rank-loading-${i}`}>
+													<TableCell>{r}</TableCell>
+													<TableCell colSpan={2}>
+														<Skeleton variant={"rectangular"} />
+													</TableCell>
+												</TableRow>
+											))}
 										{!loading && CompetitionDates[day].from > now && (
 											<TableRow>
 												<TableCell colSpan={3}>This competition has not started.</TableCell>
@@ -236,6 +296,7 @@ export const CompetitionResult = () => {
 										)}
 										{!loading &&
 											CompetitionDates[day].from <= now &&
+											leaderboard.length > 0 &&
 											RANKS.map((r, i) => {
 												if (!leaderboard[i]) {
 													return (
@@ -267,11 +328,21 @@ export const CompetitionResult = () => {
 									</TableBody>
 								</Table>
 							</TableContainer>
-							{/* <Button type={"button"} variant={"outlined"} color={"inherit"} startIcon={<EmojiEvents />} fullWidth sx={{ mt: 2 }}>
-								View More
-							</Button> */}
+							{!loading && CompetitionDates[day].from <= now && leaderboard.length > 0 && (
+								<Button
+									type={"button"}
+									variant={"outlined"}
+									color={"inherit"}
+									startIcon={<EmojiEvents />}
+									onClick={() => setShowDailyLeaderboard(true)}
+									fullWidth
+									sx={{ mt: 2 }}
+								>
+									View More
+								</Button>
+							)}
 						</Box>
-						<Box sx={{ flexGrow: 1, borderRadius: "8px", border: `1px solid #eee`, backgroundColor: "rgba(60, 60, 60, 0.7)", p: 2 }}>
+						<Box sx={{ borderRadius: "8px", border: `1px solid #eee`, backgroundColor: "rgba(60, 60, 60, 0.7)", p: 2 }}>
 							<Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
 								<div>
 									<Typography
@@ -289,6 +360,7 @@ export const CompetitionResult = () => {
 									</Typography>
 									<Typography sx={{ display: "flex" }}>
 										<AccessTime sx={{ mr: "1ch" }} />
+										{!currentComp && <Skeleton variant={"rectangular"} sx={{ bgcolor: "grey.400" }} />}
 										{currentComp && (
 											<span>{` ${dayjs(currentComp.startAt).subtract(1, "m").format("hh:mm A")} - ${dayjs(currentComp.finishAt)
 												.subtract(1, "m")
@@ -296,29 +368,28 @@ export const CompetitionResult = () => {
 										)}
 									</Typography>
 								</div>
-								{currentComp && (
-									<div>
-										<Box
-											sx={{
-												display: "flex",
-												justifyContent: "center",
-												alignItems: "center",
-												width: "80px",
-												height: "80px",
-												textShadow: "2px 4px 3px rgba(0, 0, 0, 0.3)",
-												backgroundImage: getMultiplierBackgroundColor(currentComp.multiplier),
-												border: "2px solid yellow",
-												borderRadius: "8px",
-												fontFamily: "Rajdhani,sans-serif",
-												fontSize: theme.typography.pxToRem(32),
-												fontWeight: 800,
-												color: "#fff",
-											}}
-										>
-											x{currentComp.multiplier}
-										</Box>
-									</div>
-								)}
+								<div>
+									<Box
+										sx={{
+											display: "flex",
+											justifyContent: "center",
+											alignItems: "center",
+											width: "80px",
+											height: "80px",
+											textShadow: "2px 4px 3px rgba(0, 0, 0, 0.3)",
+											backgroundImage: !loading && currentComp ? getMultiplierBackgroundColor(currentComp.multiplier) : "none",
+											border: "2px solid yellow",
+											borderRadius: "8px",
+											fontFamily: "Rajdhani,sans-serif",
+											fontSize: theme.typography.pxToRem(32),
+											fontWeight: 800,
+											color: "#fff",
+										}}
+									>
+										{!loading && currentComp && `x${currentComp.multiplier}`}
+										{loading && <CircularProgress sx={{ color: "grey.100" }} />}
+									</Box>
+								</div>
 							</Box>
 							<TableContainer
 								sx={{
@@ -354,7 +425,7 @@ export const CompetitionResult = () => {
 												<TableCell>{rank}</TableCell>
 												{loading && (
 													<TableCell colSpan={4}>
-														<Skeleton variant={"rectangular"} />
+														<Skeleton variant={"rectangular"} sx={{ bgcolor: "grey.400" }} />
 													</TableCell>
 												)}
 
@@ -386,7 +457,80 @@ export const CompetitionResult = () => {
 					</Box>
 				</Box>
 			</Box>
+			<DailyLeaderboardDialog
+				show={showDailyLeaderboard}
+				startAt={CompetitionDates[day].from}
+				finishAt={CompetitionDates[day].to}
+				leaderboard={leaderboard}
+				onClose={() => setShowDailyLeaderboard(false)}
+			/>
 		</Box>
+	)
+}
+
+/** Props for <DailyLeaderboardDialog>. */
+interface DailyLeaderboardDialogProps {
+	show: boolean
+	startAt: Date
+	finishAt: Date
+	leaderboard: LeaderboardEntry[]
+	onClose: () => void
+}
+
+/**
+ * Displays a Dialog containing the full leaderboard for the day.
+ */
+const DailyLeaderboardDialog = (props: DailyLeaderboardDialogProps) => {
+	const { show, startAt, finishAt, leaderboard, onClose } = props
+	return (
+		<Dialog open={show} onClose={onClose}>
+			<DialogTitle>
+				Daily Leaderboard
+				<Typography>
+					{dayjs(startAt).format("DD MMM YYYY")} to {dayjs(finishAt).format("DD MMM YYYY")}
+				</Typography>
+			</DialogTitle>
+			<DialogContent>
+				<TableContainer component={Paper} sx={{ maxHeight: "600px", overflowY: "scroll" }}>
+					<Table>
+						<TableHead>
+							<TableRow>
+								<TableCell sx={{ backgroundColor: "#697F42", color: "#eee" }}>Rank</TableCell>
+								<TableCell sx={{ backgroundColor: "#697F42", color: "#eee" }}>Member</TableCell>
+								<TableCell sx={{ backgroundColor: "#697F42", color: "#eee" }}>Folly Points</TableCell>
+							</TableRow>
+						</TableHead>
+						<TableBody>
+							{leaderboard.map((r, i) => {
+								console.log("WTF", r)
+								return (
+									<TableRow key={`dialog-lb-rank-${i}`}>
+										<TableCell>{getRankText(i + 1)}</TableCell>
+										<TableCell>
+											<Link
+												href={`https://www.nitrotype.com/racer/${r.username}`}
+												target={"_blank"}
+												rel={"external noreferrer"}
+												color={"#222"}
+											>
+												<strong>{r.displayName}</strong>
+											</Link>
+										</TableCell>
+										<TableCell>{r.totalPoints} Points</TableCell>
+									</TableRow>
+								)
+							})}
+						</TableBody>
+					</Table>
+				</TableContainer>
+				<Typography variant={"caption"}>Scroll through the table to view all the participants.</Typography>
+			</DialogContent>
+			<DialogActions sx={{ justifyContent: "flex-end" }}>
+				<Button type={"button"} color={"primary"} variant={"contained"} onClick={onClose}>
+					Close
+				</Button>
+			</DialogActions>
+		</Dialog>
 	)
 }
 
@@ -402,4 +546,19 @@ const getMultiplierBackgroundColor = (m: number) => {
 			return "radial-gradient(#ea8d23, #78371d)"
 	}
 	return undefined
+}
+
+const getRankText = (i: number) => {
+	var j = i % 10,
+		k = i % 100
+	if (j == 1 && k != 11) {
+		return i + "st"
+	}
+	if (j == 2 && k != 12) {
+		return i + "nd"
+	}
+	if (j == 3 && k != 13) {
+		return i + "rd"
+	}
+	return i + "th"
 }
