@@ -195,6 +195,7 @@ const BlitzScheduleDialog = (props: BlitzScheduleDialogProps) => {
 								setDay(day)
 							}
 						}}
+						sx={{ mr: 1 }}
 					>
 						{CompetitionDates.map((t, i) => (
 							<MenuItem key={`comp-day-select-${i}`} value={`${i}`}>
@@ -202,6 +203,7 @@ const BlitzScheduleDialog = (props: BlitzScheduleDialogProps) => {
 							</MenuItem>
 						))}
 					</Select>
+					<small>({Intl.DateTimeFormat().resolvedOptions().timeZone})</small>
 				</Box>
 
 				{error && <Alert severity={"error"}>Oh Folly, Silje broke stats wah...</Alert>}
