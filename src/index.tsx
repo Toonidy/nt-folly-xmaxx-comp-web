@@ -1,7 +1,6 @@
 import React from "react"
 import ReactDOM from "react-dom"
 import ReactGA from "react-ga4"
-import { BrowserRouter } from "react-router-dom"
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client"
 import { CssBaseline } from "@mui/material"
 import { ThemeProvider } from "@mui/material/styles"
@@ -26,9 +25,7 @@ ReactDOM.render(
 		<ApolloProvider client={client}>
 			<ThemeProvider theme={MainTheme}>
 				<CssBaseline />
-				<BrowserRouter>
-					<App />
-				</BrowserRouter>
+				<App />
 			</ThemeProvider>
 		</ApolloProvider>
 	</React.StrictMode>,
