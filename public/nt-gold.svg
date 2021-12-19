@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg class="upgrade-icon" fill="none" viewBox="0 0 110 83" xmlns="http://www.w3.org/2000/svg">
+<path d="m109.85 0.27295h-82.075l-1e-4 7.1e-4h-27.597l20.783 33.718-9.8085 48.536h81.007l17.691-82.255z" clip-rule="evenodd" fill="url(#b)" fill-rule="evenodd"/>
+<path d="m83.88 17.589-9.3712 47.621h-12.986l-13.454-22.178-4.3509 22.178h-15.396l9.3712-47.621h12.986l13.454 22.178 4.3509-22.178h15.396z" fill="url(#a)"/>
+<defs>
+<linearGradient id="b" x1="20.334" x2="107" y1=".27292" y2="54.914" gradientUnits="userSpaceOnUse">
+<stop stop-color="#FFD747" offset="0"/>
+<stop stop-color="#B18B00" offset=".61458"/>
+<stop stop-color="#C4A227" offset=".75083"/>
+<stop stop-color="#E6C652" offset=".96133"/>
+</linearGradient>
+<linearGradient id="a" x1="56.354" x2="52.326" y1="25.828" y2="62.91" gradientUnits="userSpaceOnUse">
+<stop offset="0"/>
+<stop stop-color="#846700" offset=".90608"/>
+</linearGradient>
+</defs>
+</svg>

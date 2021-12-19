@@ -2,10 +2,10 @@ import dayjs from "dayjs"
 import Snowfall from "react-snowfall"
 import { useTheme, useMediaQuery, Box, Paper, Container, Typography, Link, Grid, Button } from "@mui/material"
 import { Logo } from "./components/PageHeader/logo"
-import { PrizeInfo } from "./components/PageHeader/prizeInfo"
 import { NTCashIcon } from "./components/Icon/ntCash"
 import { CompetitionResult } from "./components/CompetitionResult"
 import { CompetitionTimer } from "./components/CompetitionTimer"
+import { PrizeSection } from "./components/PrizeSection"
 import { MainCompetitionRange } from "./constants/competitions"
 
 /**
@@ -54,12 +54,12 @@ export const App = () => {
 						}}
 					>
 						<Logo />
-						<PrizeInfo />
 					</Box>
 
 					{/* Body */}
 					<main>
 						<CompetitionResult />
+						<PrizeSection />
 						<CompetitionTimer />
 
 						{/* Comp Info Section */}
@@ -128,13 +128,14 @@ export const App = () => {
 						</Box>
 
 						{/* Credits Section */}
-						<Box component={"section"} sx={{ p: 2, backgroundColor: "#3e6791", color: "#fff" }}>
+						<Box component={"section"} sx={{ p: 2, backgroundColor: "#3e6791" }}>
 							<Typography
 								variant={"h2"}
 								sx={{
 									fontFamily: "Rajdhani, sans-serif",
 									fontWeight: 600,
 									textAlign: "center",
+									color: "#fff",
 								}}
 							>
 								Thank You!

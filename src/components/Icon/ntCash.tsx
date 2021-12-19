@@ -11,6 +11,7 @@ export const NTCashIcon = () => {
 				display: "inline-block",
 				fontFamily: "nitrocash, montserrat, sans-serif",
 				textRendering: "optimizeLegibility",
+				fontSize: "inherit",
 			}}
 		>
 			$
