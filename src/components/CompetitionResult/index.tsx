@@ -142,7 +142,7 @@ export const CompetitionResult = () => {
 	const theme = useTheme()
 	const hideSideSection = !useMediaQuery(theme.breakpoints.up(690))
 	const shrinkRightSection = !useMediaQuery(theme.breakpoints.up(550))
-	const isMobile = !useMediaQuery(theme.breakpoints.up(360))
+	const isMobile = useMediaQuery(theme.breakpoints.down(376))
 	const now = new Date()
 
 	const [showSchedule, setShowSchedule] = useState(false)
@@ -252,10 +252,9 @@ export const CompetitionResult = () => {
 		>
 			<Box
 				sx={{
-					display: "flex",
-					justifyContent: "space-between",
-					py: 4,
-					px: 2,
+					display: !hideSideSection ? "flex" : undefined,
+					justifyContent: hideSideSection ? "space-between" : undefined,
+					p: 2,
 				}}
 			>
 				{!hideSideSection && (
@@ -526,6 +525,9 @@ export const CompetitionResult = () => {
 										</div>
 									)}
 								</Box>
+								<Typography component={"p"} variant={"caption"}>
+									The following <em>Folly Points</em> given below:
+								</Typography>
 								<TableContainer
 									component={Paper}
 									sx={{

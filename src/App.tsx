@@ -1,6 +1,6 @@
 import dayjs from "dayjs"
 import Snowfall from "react-snowfall"
-import { useTheme, Box, Paper, Container, Typography, Link, Grid, Button } from "@mui/material"
+import { useTheme, useMediaQuery, Box, Paper, Container, Typography, Link, Grid, Button } from "@mui/material"
 import { Logo } from "./components/PageHeader/logo"
 import { PrizeInfo } from "./components/PageHeader/prizeInfo"
 import { NTCashIcon } from "./components/Icon/ntCash"
@@ -13,11 +13,28 @@ import { MainCompetitionRange } from "./constants/competitions"
  */
 export const App = () => {
 	const theme = useTheme()
+	const mobileMediaQuery = theme.breakpoints.down(376)
+	const isMobile = useMediaQuery(mobileMediaQuery)
 	return (
-		<Box sx={{ minHeight: "calc(100vh - 4rem)" }}>
+		<Box
+			sx={{
+				minHeight: "calc(100vh - 4rem)",
+				[mobileMediaQuery]: {
+					minHeight: "100vh",
+				},
+			}}
+		>
 			<Snowfall />
 
-			<Container sx={{ my: "2rem" }}>
+			<Container
+				disableGutters={isMobile}
+				sx={{
+					my: "2rem",
+					[mobileMediaQuery]: {
+						my: 0,
+					},
+				}}
+			>
 				<Paper elevation={0} sx={{ borderRadius: "16px" }}>
 					{/* Header */}
 					<Box
@@ -30,6 +47,10 @@ export const App = () => {
 							borderTopLeftRadius: "16px",
 							borderTopRightRadius: "16px",
 							p: 2,
+							[theme.breakpoints.down(376)]: {
+								borderTopLeftRadius: "unset",
+								borderTopRightRadius: "unset",
+							},
 						}}
 					>
 						<Logo />
@@ -315,15 +336,22 @@ export const App = () => {
 							borderBottomLeftRadius: "14px",
 							borderBottomRightRadius: "14px",
 							backgroundColor: theme.palette.grey[800],
+							[mobileMediaQuery]: {
+								borderBottomLeftRadius: "unset",
+								borderBottomRightRadius: "unset",
+							},
 						}}
 					>
 						<Grid container component={"footer"} spacing={2}>
-							<Grid item sm={6}>
+							<Grid item xs={12} sm={6}>
 								<Typography
 									variant={"body2"}
 									sx={{
 										position: "relative",
 										color: theme.palette.getContrastText(theme.palette.background.default),
+										[theme.breakpoints.down("sm")]: {
+											textAlign: "center",
+										},
 									}}
 								>
 									Copyright &copy; {new Date().getFullYear()}{" "}
@@ -332,7 +360,7 @@ export const App = () => {
 									</Link>
 								</Typography>
 							</Grid>
-							<Grid item sm={6}>
+							<Grid item xs={12} sm={6}>
 								<Link
 									href={"https://www.nitrotype.com/"}
 									underline={"none"}
@@ -340,10 +368,26 @@ export const App = () => {
 									rel={"external noreferrer"}
 									color={"#eee"}
 									title={"Visit Nitro Type to Learn to Type and have Fun!"}
-									sx={{ display: "flex", alignItems: "center", justifyContent: "flex-end" }}
+									sx={{
+										display: "flex",
+										alignItems: "center",
+										justifyContent: "flex-end",
+										[theme.breakpoints.down("sm")]: {
+											justifyContent: "center",
+											textAlign: "center",
+										},
+									}}
 								>
 									<img src={"/nt-16x16.png"} alt={"Nitro Type Logo"} />
-									<Typography component={"span"} variant={"body2"} sx={{ ml: "1ch" }}>
+									<Typography
+										component={"span"}
+										variant={"body2"}
+										sx={{
+											ml: "1ch",
+											fontSize: theme.typography.pxToRem(12),
+											color: "rgba(255, 255, 255, 0.7)",
+										}}
+									>
 										Visit Nitro Type
 									</Typography>
 								</Link>

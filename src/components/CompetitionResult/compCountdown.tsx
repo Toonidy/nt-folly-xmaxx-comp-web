@@ -74,7 +74,7 @@ export const CompCountdownText = (props: Props) => {
 	}
 	return (
 		<Typography component={"p"} variant={"caption"} color={"grey.300"} sx={{ mt: 1 }}>
-			{status}
+			{status} ({dayjs(comp.to).format("DD MMM YYYY hh:mm A")})
 		</Typography>
 	)
 }
