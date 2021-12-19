@@ -110,7 +110,7 @@ export const OverallLeaderboardDialog = (props: Props) => {
 								<TableRow>
 									<TableCell sx={{ backgroundColor: "#697F42", color: "#eee" }}>Rank</TableCell>
 									<TableCell sx={{ backgroundColor: "#697F42", color: "#eee" }}>Member</TableCell>
-									<TableCell sx={{ backgroundColor: "#697F42", color: "#eee" }}>Folly Points</TableCell>
+									<TableCell sx={{ backgroundColor: "#697F42", color: "#eee", textAlign: "right" }}>Folly Points</TableCell>
 								</TableRow>
 							</TableHead>
 							<TableBody>

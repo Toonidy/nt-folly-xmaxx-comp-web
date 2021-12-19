@@ -3,12 +3,15 @@ import { useState, useEffect } from "react"
 import { gql, useLazyQuery } from "@apollo/client"
 import {
 	useTheme,
+	useMediaQuery,
 	Box,
 	Grid,
 	Paper,
 	Typography,
 	Link,
 	Skeleton,
+	Select,
+	MenuItem,
 	TableContainer,
 	Table,
 	TableHead,
@@ -23,13 +26,14 @@ import {
 	DialogContent,
 	DialogActions,
 } from "@mui/material"
-import { AccessTime, EmojiEvents } from "@mui/icons-material"
+import { AccessTime, EmojiEvents, EventNote } from "@mui/icons-material"
 import { CalendarDate } from "./calendarDate"
-import { CompCountdownChip } from "./compCountdownChip"
+import { CompCountdownChip, CompCountdownText } from "./compCountdown"
 import { OverallLeaderboardDialog } from "./overallLeaderboardDialog"
 import { getRankText } from "../../utils/text"
 import { CompetitionDates } from "../../constants/competitions"
 import NTGoldIcon from "../../assets/images/nt-gold-icon.png"
+import { BlitzScheduleDialog } from "./blitzScheduleDialog"
 
 /** Ranks List for iterating purposes. */
 const RANKS = ["🥇 1st", "🥈 2nd", "🥉 3rd", "🎖️ 4th", "🎖️ 5th"]
@@ -136,8 +140,12 @@ interface LeaderboardEntry {
  */
 export const CompetitionResult = () => {
 	const theme = useTheme()
+	const hideSideSection = !useMediaQuery(theme.breakpoints.up(690))
+	const shrinkRightSection = !useMediaQuery(theme.breakpoints.up(550))
+	const isMobile = !useMediaQuery(theme.breakpoints.up(360))
 	const now = new Date()
 
+	const [showSchedule, setShowSchedule] = useState(false)
 	const [showDailyLeaderboard, setShowDailyLeaderboard] = useState(false)
 	const [showOverallLeaderboard, setShowOverallLeaderboard] = useState(false)
 	const [day, setDay] = useState(() => {
@@ -250,43 +258,111 @@ export const CompetitionResult = () => {
 					px: 2,
 				}}
 			>
-				<Box sx={{ display: "flex", flexDirection: "column", mr: 2 }}>
-					<CalendarDate onDayChange={(d) => setDay(d)} />
-					<Button
-						type={"button"}
-						variant={"contained"}
-						color={"secondary"}
-						startIcon={<EmojiEvents />}
-						onClick={() => setShowOverallLeaderboard(true)}
-						sx={{ mt: 1 }}
-					>
-						Leaderboard
-					</Button>
-				</Box>
+				{!hideSideSection && (
+					<Box sx={{ display: "flex", flexDirection: "column", mr: 2 }}>
+						<CalendarDate day={day} onDayChange={(d) => setDay(d)} />
+						<Button
+							type={"button"}
+							variant={"contained"}
+							color={"primary"}
+							startIcon={<EventNote />}
+							onClick={() => setShowSchedule(true)}
+							sx={{ mt: 2 }}
+						>
+							Blitzes
+						</Button>
+						<Button
+							type={"button"}
+							variant={"contained"}
+							color={"secondary"}
+							startIcon={<EmojiEvents />}
+							onClick={() => setShowOverallLeaderboard(true)}
+							sx={{ mt: 1 }}
+						>
+							Leaderboard
+						</Button>
+					</Box>
+				)}
 				<Box
 					sx={{
-						flexGrow: 1,
+						flexGrow: hideSideSection ? undefined : 1,
 						p: 2,
 						borderRadius: theme.typography.pxToRem(8),
 						backgroundColor: "rgba(0, 0, 0, 0.7)",
 					}}
 				>
 					<Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
-						<Typography
-							component={"h2"}
-							variant={"h3"}
-							sx={{
-								fontFamily: "Rajdhani,sans-serif",
-								fontWeight: 600,
-								letterSpacing: "1px",
-							}}
-						>
-							Daily Leaderboard - <em>{dayjs(CompetitionDates[day].from).format("DD MMM YYYY")}</em> to{" "}
-							<em>{dayjs(CompetitionDates[day].to).format("DD MMM YYYY")}</em>
-						</Typography>
-						<CompCountdownChip day={day} />
+						<Box sx={{ mr: 2 }}>
+							<Typography
+								component={"h2"}
+								variant={"h3"}
+								sx={{
+									fontFamily: "Rajdhani,sans-serif",
+									fontWeight: 600,
+									letterSpacing: "1px",
+								}}
+							>
+								Daily Leaderboard
+							</Typography>
+							{!hideSideSection && (
+								<Typography
+									sx={{
+										mt: 0.5,
+										fontSize: theme.typography.pxToRem(14),
+									}}
+								>
+									<em>{dayjs(CompetitionDates[day].from).format("DD MMM YYYY")}</em> to{" "}
+									<em>{dayjs(CompetitionDates[day].to).format("DD MMM YYYY")}</em>
+								</Typography>
+							)}
+							{hideSideSection && (
+								<Select
+									value={day}
+									variant={"outlined"}
+									size={"small"}
+									onChange={(e) => {
+										const val = typeof e.target.value === "string" ? parseInt(e.target.value, 10) : e.target.value
+										if (!isNaN(val)) {
+											setDay(val)
+										}
+									}}
+									// input={<DaySelectInputBase />}
+									sx={{
+										mt: 1,
+										backgroundColor: "rgba(200, 200, 200, 0.4)",
+										color: "#eee",
+										"& .MuiSvgIcon-root": {
+											color: "#eee",
+										},
+										"& .MuiSelect-nativeInput": {
+											borderColor: "#eee",
+										},
+										"& .MuiOutlinedInput-notchedOutline": {
+											borderColor: "#eee",
+										},
+										// .css-1cub0o4-MuiInputBase-root-MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline
+										"&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+											borderColor: "#fff",
+										},
+									}}
+								>
+									{CompetitionDates.map((c, i) => (
+										<MenuItem key={`mobile-day-selector-${i}`} value={i}>
+											<strong>Day {i + 1}</strong>&nbsp;-&nbsp;<em>{dayjs(CompetitionDates[i].from).format("DD MMM YYYY")}</em>
+											{!isMobile && (
+												<>
+													&nbsp;to&nbsp;
+													<em>{dayjs(CompetitionDates[i].to).format("DD MMM YYYY")}</em>
+												</>
+											)}
+										</MenuItem>
+									))}
+								</Select>
+							)}
+							{shrinkRightSection && <CompCountdownText day={day} />}
+						</Box>
+						{!shrinkRightSection && <CompCountdownChip day={day} />}
 					</Box>
-
 					<Grid container spacing={2}>
 						<Grid item lg={5.5} width={"100%"}>
 							<TableContainer component={Paper}>
@@ -295,7 +371,7 @@ export const CompetitionResult = () => {
 										<TableRow>
 											<TableCell sx={{ backgroundColor: "#697F42", color: "#eee" }}>Rank</TableCell>
 											<TableCell sx={{ backgroundColor: "#697F42", color: "#eee" }}>Member</TableCell>
-											<TableCell sx={{ backgroundColor: "#697F42", color: "#eee" }}>Folly Points</TableCell>
+											<TableCell sx={{ backgroundColor: "#697F42", color: "#eee", textAlign: "right" }}>Folly Points</TableCell>
 										</TableRow>
 									</TableHead>
 									<TableBody>
@@ -364,14 +440,27 @@ export const CompetitionResult = () => {
 							{!loading && CompetitionDates[day].from <= now && leaderboard.length > 0 && (
 								<Button
 									type={"button"}
-									variant={"outlined"}
-									color={"inherit"}
+									variant={"contained"}
+									color={"info"}
 									startIcon={<EmojiEvents />}
 									onClick={() => setShowDailyLeaderboard(true)}
 									fullWidth
 									sx={{ mt: 2 }}
 								>
 									View More
+								</Button>
+							)}
+							{hideSideSection && (
+								<Button
+									type={"button"}
+									variant={"contained"}
+									color={"info"}
+									startIcon={<EmojiEvents />}
+									onClick={() => setShowOverallLeaderboard(true)}
+									fullWidth
+									sx={{ mt: 1 }}
+								>
+									Main Leaderboard
 								</Button>
 							)}
 						</Grid>
@@ -390,46 +479,58 @@ export const CompetitionResult = () => {
 											}}
 										>
 											Blitz Rewards
-										</Typography>
-										<Typography sx={{ display: "flex" }}>
-											<AccessTime sx={{ mr: "1ch" }} />
-											{!currentComp && <Skeleton variant={"rectangular"} sx={{ bgcolor: "grey.400" }} />}
-											{currentComp && (
-												<>
-													<Box component={"span"} sx={{ mr: "1ch" }}>{` ${dayjs(currentComp.startAt)
-														.subtract(1, "m")
-														.format("hh:mm A")} - ${dayjs(currentComp.finishAt).subtract(1, "m").format("hh:mm A")}`}</Box>
-													<small>({Intl.DateTimeFormat().resolvedOptions().timeZone})</small>
-												</>
+											{shrinkRightSection && currentComp && (
+												<span>
+													&nbsp;(x{currentComp.multiplier}
+													{currentComp.multiplier > 1 && " bonus"})
+												</span>
 											)}
 										</Typography>
-									</div>
-									<div>
-										<Box
-											sx={{
-												display: "flex",
-												justifyContent: "center",
-												alignItems: "center",
-												width: "80px",
-												height: "80px",
-												textShadow: "2px 4px 3px rgba(0, 0, 0, 0.3)",
-												backgroundImage: !loading && currentComp ? getMultiplierBackgroundColor(currentComp.multiplier) : "none",
-												border: "2px solid yellow",
-												borderRadius: "8px",
-												fontFamily: "Rajdhani,sans-serif",
-												fontSize: theme.typography.pxToRem(32),
-												fontWeight: 800,
-												color: "#fff",
-											}}
-										>
-											{!loading && currentComp && `x${currentComp.multiplier}`}
-											{loading && <CircularProgress sx={{ color: "grey.100" }} />}
+										<Box sx={{ display: "flex", alignItems: "center" }}>
+											<AccessTime sx={{ mr: "1ch", display: "inline-block" }} />
+											<Typography>
+												{!currentComp && <Skeleton variant={"rectangular"} sx={{ bgcolor: "grey.400" }} />}
+												{currentComp && (
+													<>
+														<Box component={"span"} sx={{ mr: "1ch" }}>{` ${dayjs(currentComp.startAt)
+															.subtract(1, "m")
+															.format("hh:mm A")} - ${dayjs(currentComp.finishAt).subtract(1, "m").format("hh:mm A")}`}</Box>
+														<small>({Intl.DateTimeFormat().resolvedOptions().timeZone})</small>
+													</>
+												)}
+											</Typography>
 										</Box>
 									</div>
+									{!shrinkRightSection && (
+										<div>
+											<Box
+												sx={{
+													display: "flex",
+													justifyContent: "center",
+													alignItems: "center",
+													width: "80px",
+													height: "80px",
+													textShadow: "2px 4px 3px rgba(0, 0, 0, 0.3)",
+													backgroundImage: !loading && currentComp ? getMultiplierBackgroundColor(currentComp.multiplier) : "none",
+													border: "2px solid yellow",
+													borderRadius: "8px",
+													fontFamily: "Rajdhani,sans-serif",
+													fontSize: theme.typography.pxToRem(32),
+													fontWeight: 800,
+													color: "#fff",
+												}}
+											>
+												{!loading && currentComp && `x${currentComp.multiplier}`}
+												{loading && <CircularProgress sx={{ color: "grey.100" }} />}
+											</Box>
+										</div>
+									)}
 								</Box>
 								<TableContainer
+									component={Paper}
 									sx={{
 										border: `1px solid ${theme.palette.grey[200]}`,
+										background: "transparent",
 										borderRadius: "4px",
 										"& .MuiTableCell-root": {
 											color: "#fff",
@@ -498,6 +599,19 @@ export const CompetitionResult = () => {
 									</Table>
 								</TableContainer>
 							</Box>
+							{hideSideSection && (
+								<Button
+									type={"button"}
+									variant={"contained"}
+									color={"info"}
+									startIcon={<EventNote />}
+									onClick={() => setShowSchedule(true)}
+									fullWidth
+									sx={{ mt: 1 }}
+								>
+									View Blitz Schedule
+								</Button>
+							)}
 						</Grid>
 					</Grid>
 				</Box>
@@ -510,6 +624,7 @@ export const CompetitionResult = () => {
 				onClose={() => setShowDailyLeaderboard(false)}
 			/>
 			<OverallLeaderboardDialog show={showOverallLeaderboard} onClose={() => setShowOverallLeaderboard(false)} />
+			<BlitzScheduleDialog show={showSchedule} defaultDay={day} onClose={() => setShowSchedule(false)} />
 		</Box>
 	)
 }
@@ -543,7 +658,7 @@ const DailyLeaderboardDialog = (props: DailyLeaderboardDialogProps) => {
 							<TableRow>
 								<TableCell sx={{ backgroundColor: "#697F42", color: "#eee" }}>Rank</TableCell>
 								<TableCell sx={{ backgroundColor: "#697F42", color: "#eee" }}>Member</TableCell>
-								<TableCell sx={{ backgroundColor: "#697F42", color: "#eee" }}>Folly Points</TableCell>
+								<TableCell sx={{ backgroundColor: "#697F42", color: "#eee", textAlign: "right" }}>Folly Points</TableCell>
 							</TableRow>
 						</TableHead>
 						<TableBody>

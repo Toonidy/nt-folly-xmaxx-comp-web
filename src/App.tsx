@@ -13,7 +13,6 @@ import { MainCompetitionRange } from "./constants/competitions"
  */
 export const App = () => {
 	const theme = useTheme()
-	console.log("Breakpoints", theme.breakpoints)
 	return (
 		<Box sx={{ minHeight: "calc(100vh - 4rem)" }}>
 			<Snowfall />
@@ -306,6 +305,7 @@ export const App = () => {
 							</Grid>
 						</Box>
 					</main>
+
 					{/* Footer */}
 					<Box
 						component={"footer"}

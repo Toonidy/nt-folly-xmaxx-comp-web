@@ -25,6 +25,9 @@ export const CompetitionTimer = () => {
 					fontWeight: 500,
 					fontSize: theme.typography.pxToRem(24),
 					textAlign: "center",
+					[theme.breakpoints.down(740)]: {
+						fontSize: theme.typography.pxToRem(22),
+					},
 				}}
 			>
 				<Countdown
@@ -36,9 +39,16 @@ export const CompetitionTimer = () => {
 						return (
 							<>
 								{`Competition ends in: `}
-								<strong>
+								<Box
+									component={"strong"}
+									sx={{
+										[theme.breakpoints.down(740)]: {
+											display: "block",
+										},
+									}}
+								>
 									{days} days, {hours} hours, {minutes} minutes and {seconds} seconds
-								</strong>
+								</Box>
 							</>
 						)
 					}}

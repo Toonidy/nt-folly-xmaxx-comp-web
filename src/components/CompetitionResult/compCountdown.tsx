@@ -1,7 +1,7 @@
 import dayjs from "dayjs"
 import relativeTime from "dayjs/plugin/relativeTime"
 import { useState, useEffect } from "react"
-import { Chip } from "@mui/material"
+import { Chip, Typography } from "@mui/material"
 import { CompetitionDates, DateRange } from "../../constants/competitions"
 
 dayjs.extend(relativeTime)
@@ -47,6 +47,39 @@ export const CompCountdownChip = (props: Props) => {
 		/>
 	)
 }
+
+/**
+ * Displays Comp Countdown text.
+ */
+export const CompCountdownText = (props: Props) => {
+	const { day } = props
+	const comp = CompetitionDates[day]
+	const [status, setStatus] = useState(generateCompCountdownStatus(comp))
+
+	useEffect(() => {
+		const now = new Date()
+		if (!comp) {
+			return
+		}
+		setStatus(generateCompCountdownStatus(comp))
+		if (now > comp.to) {
+			return
+		}
+		const t = setInterval(() => setStatus(generateCompCountdownStatus(comp)), 6000)
+		return () => clearTimeout(t)
+	}, [comp])
+
+	if (!comp) {
+		return null
+	}
+	return (
+		<Typography component={"p"} variant={"caption"} color={"grey.300"} sx={{ mt: 1 }}>
+			{status}
+		</Typography>
+	)
+}
+
+/**
 
 /**
  * Generates Comp Countdown status text.
