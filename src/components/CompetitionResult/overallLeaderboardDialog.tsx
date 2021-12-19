@@ -105,7 +105,7 @@ export const OverallLeaderboardDialog = (props: Props) => {
 				{error && <Alert severity={"error"}>Oh Folly, stats broken... wah.</Alert>}
 				{!error && (
 					<TableContainer component={Paper} sx={{ maxHeight: "600px", overflowY: "scroll" }}>
-						<Table>
+						<Table stickyHeader>
 							<TableHead>
 								<TableRow>
 									<TableCell sx={{ backgroundColor: "#697F42", color: "#eee" }}>Rank</TableCell>
@@ -147,7 +147,7 @@ export const OverallLeaderboardDialog = (props: Props) => {
 													<strong>&nbsp;{u.displayName}</strong>
 												</Link>
 											</TableCell>
-											<TableCell>{u.totalPoints} Points</TableCell>
+											<TableCell sx={{ textAlign: "right" }}>{u.totalPoints}</TableCell>
 										</TableRow>
 									))}
 							</TableBody>

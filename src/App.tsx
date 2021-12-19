@@ -13,6 +13,7 @@ import { MainCompetitionRange } from "./constants/competitions"
  */
 export const App = () => {
 	const theme = useTheme()
+	console.log("Breakpoints", theme.breakpoints)
 	return (
 		<Box sx={{ minHeight: "calc(100vh - 4rem)" }}>
 			<Snowfall />
@@ -118,9 +119,9 @@ export const App = () => {
 							>
 								Thank You!
 							</Typography>
-							<Typography sx={{ color: "#ddd", textAlign: "center", mb: 2 }}>For making this comp possible.</Typography>
+							<Typography sx={{ color: "#ddd", textAlign: "center", fontWeight: 500, mb: 2 }}>For making this comp possible.</Typography>
 							<Grid container spacing={2}>
-								<Grid item xs={4}>
+								<Grid item md={4} width={"100%"}>
 									<Paper elevation={0} sx={{ p: 2, backgroundColor: "rgba(0, 0, 0, 0.2)", color: "#ddd", height: "100%" }}>
 										<Typography
 											variant={"h5"}
@@ -200,7 +201,7 @@ export const App = () => {
 										</ul>
 									</Paper>
 								</Grid>
-								<Grid item xs={4}>
+								<Grid item md={4} width={"100%"}>
 									<Paper elevation={0} sx={{ p: 2, backgroundColor: "rgba(0, 0, 0, 0.2)", color: "#ddd", height: "100%" }}>
 										<Typography
 											variant={"h5"}
@@ -255,7 +256,7 @@ export const App = () => {
 										</ul>
 									</Paper>
 								</Grid>
-								<Grid item xs={4}>
+								<Grid item md={4} width={"100%"}>
 									<Paper elevation={0} sx={{ p: 2, backgroundColor: "rgba(0, 0, 0, 0.2)", color: "#ddd", height: "100%" }}>
 										<Typography
 											variant={"h5"}
@@ -309,41 +310,45 @@ export const App = () => {
 					<Box
 						component={"footer"}
 						sx={{
-							display: "flex",
-							justifyContent: "space-between",
-							alignItems: "center",
+							position: "relative",
 							p: 2,
 							borderBottomLeftRadius: "14px",
 							borderBottomRightRadius: "14px",
 							backgroundColor: theme.palette.grey[800],
 						}}
 					>
-						<Typography
-							variant={"body2"}
-							sx={{
-								position: "relative",
-								color: theme.palette.getContrastText(theme.palette.background.default),
-							}}
-						>
-							Copyright &copy; {new Date().getFullYear()}{" "}
-							<Link href={"https://folly.team/"} sx={{ fontWeight: 600, color: "#eee" }}>
-								Folly Times
-							</Link>
-						</Typography>
-						<Link
-							href={"https://www.nitrotype.com/"}
-							underline={"none"}
-							target={"_blank"}
-							rel={"external noreferrer"}
-							color={"#eee"}
-							title={"Visit Nitro Type to Learn to Type and have Fun!"}
-							sx={{ display: "flex", alignItems: "center" }}
-						>
-							<img src={"/nt-16x16.png"} alt={"Nitro Type Logo"} />
-							<Typography component={"span"} variant={"body2"} sx={{ ml: "1ch" }}>
-								Visit Nitro Type
-							</Typography>
-						</Link>
+						<Grid container component={"footer"} spacing={2}>
+							<Grid item sm={6}>
+								<Typography
+									variant={"body2"}
+									sx={{
+										position: "relative",
+										color: theme.palette.getContrastText(theme.palette.background.default),
+									}}
+								>
+									Copyright &copy; {new Date().getFullYear()}{" "}
+									<Link href={"https://folly.team/"} sx={{ fontWeight: 600, color: "#eee" }}>
+										Folly Times
+									</Link>
+								</Typography>
+							</Grid>
+							<Grid item sm={6}>
+								<Link
+									href={"https://www.nitrotype.com/"}
+									underline={"none"}
+									target={"_blank"}
+									rel={"external noreferrer"}
+									color={"#eee"}
+									title={"Visit Nitro Type to Learn to Type and have Fun!"}
+									sx={{ display: "flex", alignItems: "center", justifyContent: "flex-end" }}
+								>
+									<img src={"/nt-16x16.png"} alt={"Nitro Type Logo"} />
+									<Typography component={"span"} variant={"body2"} sx={{ ml: "1ch" }}>
+										Visit Nitro Type
+									</Typography>
+								</Link>
+							</Grid>
+						</Grid>
 					</Box>
 				</Paper>
 			</Container>

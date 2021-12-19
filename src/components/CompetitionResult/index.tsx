@@ -4,6 +4,7 @@ import { gql, useLazyQuery } from "@apollo/client"
 import {
 	useTheme,
 	Box,
+	Grid,
 	Paper,
 	Typography,
 	Link,
@@ -249,7 +250,7 @@ export const CompetitionResult = () => {
 					px: 2,
 				}}
 			>
-				<Box sx={{ display: "flex", flexDirection: "column", mr: 4 }}>
+				<Box sx={{ display: "flex", flexDirection: "column", mr: 2 }}>
 					<CalendarDate onDayChange={(d) => setDay(d)} />
 					<Button
 						type={"button"}
@@ -286,8 +287,8 @@ export const CompetitionResult = () => {
 						<CompCountdownChip day={day} />
 					</Box>
 
-					<Box sx={{ display: "flex" }}>
-						<Box sx={{ flexGrow: 1, mr: 2 }}>
+					<Grid container spacing={2}>
+						<Grid item lg={5.5} width={"100%"}>
 							<TableContainer component={Paper}>
 								<Table>
 									<TableHead>
@@ -352,7 +353,7 @@ export const CompetitionResult = () => {
 																<strong>&nbsp;{leaderboard[i].displayName}</strong>
 															</Link>
 														</TableCell>
-														<TableCell>{leaderboard[i].totalPoints} Points</TableCell>
+														<TableCell sx={{ textAlign: "right" }}>{leaderboard[i].totalPoints}</TableCell>
 													</TableRow>
 												)
 											})}
@@ -373,130 +374,132 @@ export const CompetitionResult = () => {
 									View More
 								</Button>
 							)}
-						</Box>
-						<Box sx={{ borderRadius: "8px", border: `1px solid #eee`, backgroundColor: "rgba(60, 60, 60, 0.7)", p: 2 }}>
-							<Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
-								<div>
-									<Typography
-										component={"h2"}
-										variant={"h3"}
-										gutterBottom
-										sx={{
-											fontFamily: "Rajdhani,sans-serif",
-											fontWeight: 500,
-											letterSpacing: "1px",
-										}}
-									>
-										Blitz Rewards
-									</Typography>
-									<Typography sx={{ display: "flex" }}>
-										<AccessTime sx={{ mr: "1ch" }} />
-										{!currentComp && <Skeleton variant={"rectangular"} sx={{ bgcolor: "grey.400" }} />}
-										{currentComp && (
-											<>
-												<Box component={"span"} sx={{ mr: "1ch" }}>{` ${dayjs(currentComp.startAt)
-													.subtract(1, "m")
-													.format("hh:mm A")} - ${dayjs(currentComp.finishAt).subtract(1, "m").format("hh:mm A")}`}</Box>
-												<small>({Intl.DateTimeFormat().resolvedOptions().timeZone})</small>
-											</>
-										)}
-									</Typography>
-								</div>
-								<div>
-									<Box
-										sx={{
-											display: "flex",
-											justifyContent: "center",
-											alignItems: "center",
-											width: "80px",
-											height: "80px",
-											textShadow: "2px 4px 3px rgba(0, 0, 0, 0.3)",
-											backgroundImage: !loading && currentComp ? getMultiplierBackgroundColor(currentComp.multiplier) : "none",
-											border: "2px solid yellow",
-											borderRadius: "8px",
-											fontFamily: "Rajdhani,sans-serif",
-											fontSize: theme.typography.pxToRem(32),
-											fontWeight: 800,
+						</Grid>
+						<Grid item lg={6.5} width={"100%"}>
+							<Box sx={{ borderRadius: "8px", border: `1px solid #eee`, backgroundColor: "rgba(60, 60, 60, 0.7)", p: 2 }}>
+								<Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
+									<div>
+										<Typography
+											component={"h2"}
+											variant={"h3"}
+											gutterBottom
+											sx={{
+												fontFamily: "Rajdhani,sans-serif",
+												fontWeight: 500,
+												letterSpacing: "1px",
+											}}
+										>
+											Blitz Rewards
+										</Typography>
+										<Typography sx={{ display: "flex" }}>
+											<AccessTime sx={{ mr: "1ch" }} />
+											{!currentComp && <Skeleton variant={"rectangular"} sx={{ bgcolor: "grey.400" }} />}
+											{currentComp && (
+												<>
+													<Box component={"span"} sx={{ mr: "1ch" }}>{` ${dayjs(currentComp.startAt)
+														.subtract(1, "m")
+														.format("hh:mm A")} - ${dayjs(currentComp.finishAt).subtract(1, "m").format("hh:mm A")}`}</Box>
+													<small>({Intl.DateTimeFormat().resolvedOptions().timeZone})</small>
+												</>
+											)}
+										</Typography>
+									</div>
+									<div>
+										<Box
+											sx={{
+												display: "flex",
+												justifyContent: "center",
+												alignItems: "center",
+												width: "80px",
+												height: "80px",
+												textShadow: "2px 4px 3px rgba(0, 0, 0, 0.3)",
+												backgroundImage: !loading && currentComp ? getMultiplierBackgroundColor(currentComp.multiplier) : "none",
+												border: "2px solid yellow",
+												borderRadius: "8px",
+												fontFamily: "Rajdhani,sans-serif",
+												fontSize: theme.typography.pxToRem(32),
+												fontWeight: 800,
+												color: "#fff",
+											}}
+										>
+											{!loading && currentComp && `x${currentComp.multiplier}`}
+											{loading && <CircularProgress sx={{ color: "grey.100" }} />}
+										</Box>
+									</div>
+								</Box>
+								<TableContainer
+									sx={{
+										border: `1px solid ${theme.palette.grey[200]}`,
+										borderRadius: "4px",
+										"& .MuiTableCell-root": {
 											color: "#fff",
-										}}
-									>
-										{!loading && currentComp && `x${currentComp.multiplier}`}
-										{loading && <CircularProgress sx={{ color: "grey.100" }} />}
-									</Box>
-								</div>
-							</Box>
-							<TableContainer
-								sx={{
-									border: `1px solid ${theme.palette.grey[200]}`,
-									borderRadius: "4px",
-									"& .MuiTableCell-root": {
-										color: "#fff",
-									},
-									"& .MuiTableRow-head  .MuiTableCell-root": {
-										backgroundColor: "rgba(0, 0, 0, 0.8)",
-									},
-									"& .MuiTableBody-root .MuiTableRow-root:nth-of-type(odd) .MuiTableCell-root": {
-										backgroundColor: "rgba(0, 0, 0, 0.25)",
-									},
-									"& .MuiTableBody-root .MuiTableRow-root:nth-of-type(even) .MuiTableCell-root": {
-										backgroundColor: "transparent",
-									},
-								}}
-							>
-								<Table>
-									<TableHead>
-										<TableRow>
-											<TableCell>Rank</TableCell>
-											<TableCell>Races</TableCell>
-											<TableCell>Accuracy</TableCell>
-											<TableCell>Speed</TableCell>
-											<TableCell>NT Points</TableCell>
-										</TableRow>
-									</TableHead>
-									<TableBody>
-										{RANKS.map((rank, i) => (
-											<TableRow key={`current-blitz-info-rank-${i}`}>
-												<TableCell>{rank}</TableCell>
-												{loading && (
-													<TableCell colSpan={4}>
-														<Skeleton variant={"rectangular"} sx={{ bgcolor: "grey.400" }} />
-													</TableCell>
-												)}
-
-												{!loading && currentComp?.grindRewards[i] && (
-													<TableCell sx={{ fontWeight: 300 }}>
-														{currentComp.multiplier * currentComp.grindRewards[i].points} points
-													</TableCell>
-												)}
-												{!loading && !currentComp?.grindRewards[i] && <TableCell sx={{ fontWeight: 300 }}>???</TableCell>}
-
-												{!loading && currentComp?.accuracyRewards[i] && (
-													<TableCell sx={{ fontWeight: 300 }}>
-														{currentComp.multiplier * currentComp.accuracyRewards[i].points} points
-													</TableCell>
-												)}
-												{!loading && !currentComp?.accuracyRewards[i] && <TableCell sx={{ fontWeight: 300 }}>???</TableCell>}
-
-												{!loading && currentComp?.speedRewards[i] && (
-													<TableCell sx={{ fontWeight: 300 }}>
-														{currentComp.multiplier * currentComp.speedRewards[i].points} points
-													</TableCell>
-												)}
-												{!loading && !currentComp?.speedRewards[i] && <TableCell sx={{ fontWeight: 300 }}>???</TableCell>}
-
-												{!loading && currentComp?.pointRewards[i] && (
-													<TableCell sx={{ fontWeight: 300 }}>
-														{currentComp.multiplier * currentComp.pointRewards[i].points} points
-													</TableCell>
-												)}
-												{!loading && !currentComp?.pointRewards[i] && <TableCell sx={{ fontWeight: 300 }}>???</TableCell>}
+										},
+										"& .MuiTableRow-head  .MuiTableCell-root": {
+											backgroundColor: "rgba(0, 0, 0, 0.8)",
+										},
+										"& .MuiTableBody-root .MuiTableRow-root:nth-of-type(odd) .MuiTableCell-root": {
+											backgroundColor: "rgba(0, 0, 0, 0.25)",
+										},
+										"& .MuiTableBody-root .MuiTableRow-root:nth-of-type(even) .MuiTableCell-root": {
+											backgroundColor: "transparent",
+										},
+									}}
+								>
+									<Table>
+										<TableHead>
+											<TableRow>
+												<TableCell>Rank</TableCell>
+												<TableCell>Races</TableCell>
+												<TableCell>Accuracy</TableCell>
+												<TableCell>Speed</TableCell>
+												<TableCell>NT Points</TableCell>
 											</TableRow>
-										))}
-									</TableBody>
-								</Table>
-							</TableContainer>
-						</Box>
-					</Box>
+										</TableHead>
+										<TableBody>
+											{RANKS.map((rank, i) => (
+												<TableRow key={`current-blitz-info-rank-${i}`}>
+													<TableCell>{rank}</TableCell>
+													{loading && (
+														<TableCell colSpan={4}>
+															<Skeleton variant={"rectangular"} sx={{ bgcolor: "grey.400" }} />
+														</TableCell>
+													)}
+
+													{!loading && currentComp?.grindRewards[i] && (
+														<TableCell sx={{ fontWeight: 300 }}>
+															{currentComp.multiplier * currentComp.grindRewards[i].points} points
+														</TableCell>
+													)}
+													{!loading && !currentComp?.grindRewards[i] && <TableCell sx={{ fontWeight: 300 }}>???</TableCell>}
+
+													{!loading && currentComp?.accuracyRewards[i] && (
+														<TableCell sx={{ fontWeight: 300 }}>
+															{currentComp.multiplier * currentComp.accuracyRewards[i].points} points
+														</TableCell>
+													)}
+													{!loading && !currentComp?.accuracyRewards[i] && <TableCell sx={{ fontWeight: 300 }}>???</TableCell>}
+
+													{!loading && currentComp?.speedRewards[i] && (
+														<TableCell sx={{ fontWeight: 300 }}>
+															{currentComp.multiplier * currentComp.speedRewards[i].points} points
+														</TableCell>
+													)}
+													{!loading && !currentComp?.speedRewards[i] && <TableCell sx={{ fontWeight: 300 }}>???</TableCell>}
+
+													{!loading && currentComp?.pointRewards[i] && (
+														<TableCell sx={{ fontWeight: 300 }}>
+															{currentComp.multiplier * currentComp.pointRewards[i].points} points
+														</TableCell>
+													)}
+													{!loading && !currentComp?.pointRewards[i] && <TableCell sx={{ fontWeight: 300 }}>???</TableCell>}
+												</TableRow>
+											))}
+										</TableBody>
+									</Table>
+								</TableContainer>
+							</Box>
+						</Grid>
+					</Grid>
 				</Box>
 			</Box>
 			<DailyLeaderboardDialog
@@ -566,7 +569,7 @@ const DailyLeaderboardDialog = (props: DailyLeaderboardDialogProps) => {
 												<strong>&nbsp;{r.displayName}</strong>
 											</Link>
 										</TableCell>
-										<TableCell>{r.totalPoints} Points</TableCell>
+										<TableCell sx={{ textAlign: "right" }}>{r.totalPoints}</TableCell>
 									</TableRow>
 								)
 							})}

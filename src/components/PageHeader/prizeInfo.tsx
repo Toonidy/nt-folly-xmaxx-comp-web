@@ -9,7 +9,15 @@ export const PrizeInfo = () => {
 	const theme = useTheme()
 
 	return (
-		<Box sx={{ display: "flex", flexDirection: "column" }}>
+		<Box
+			sx={{
+				display: "flex",
+				flexDirection: "column",
+				[`${theme.breakpoints.down(860)}`]: {
+					display: "none",
+				},
+			}}
+		>
 			<Box
 				sx={{
 					p: 2,
