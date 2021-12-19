@@ -217,8 +217,8 @@ export const CompetitionResult = () => {
 			const reloadStats = () => {
 				// Check if we need to go to the next day instead
 				const now = new Date()
-				if (CompetitionDates[day].to < now) {
-					// setDay((prev) => Math.min(CompetitionDates.length - 1, prev + 1))
+				if (CompetitionDates[day + 1] && CompetitionDates[day + 1].from <= now && CompetitionDates[day + 1].to > now) {
+					setDay((prev) => Math.min(CompetitionDates.length - 1, prev + 1))
 					return
 				}
 
