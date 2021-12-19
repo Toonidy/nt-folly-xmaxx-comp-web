@@ -43,8 +43,8 @@ export const PrizeSection = () => {
 		setActiveSlide((prev) => Math.max(prev - 1, 0))
 	}, [])
 	const nextDayClickHandler = useCallback(() => {
-		setActiveSlide((prev) => Math.min(prev + 1, CompetitionDates.length + 1))
-	}, [])
+		setActiveSlide((prev) => Math.min(prev + 1, CompetitionDates.length + 3 - visibleSlides))
+	}, [visibleSlides])
 
 	return (
 		<Box
@@ -83,7 +83,7 @@ export const PrizeSection = () => {
 						</Tooltip>
 					</IconButton>
 					<IconButton
-						disabled={activeSlide === CompetitionDates.length + 1}
+						disabled={activeSlide === CompetitionDates.length + 3 - visibleSlides}
 						color={"inherit"}
 						onClick={nextDayClickHandler}
 						sx={{
