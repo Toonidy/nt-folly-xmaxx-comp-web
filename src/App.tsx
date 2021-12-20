@@ -333,7 +333,6 @@ export const App = () => {
 						<Box
 							component={"footer"}
 							sx={{
-								position: "relative",
 								p: 2,
 								borderBottomLeftRadius: "14px",
 								borderBottomRightRadius: "14px",
