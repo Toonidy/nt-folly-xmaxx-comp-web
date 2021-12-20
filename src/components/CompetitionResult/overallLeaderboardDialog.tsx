@@ -104,7 +104,7 @@ export const OverallLeaderboardDialog = (props: Props) => {
 			<DialogContent>
 				{error && <Alert severity={"error"}>Oh Folly, stats broken... wah.</Alert>}
 				{!error && (
-					<TableContainer component={Paper} sx={{ maxHeight: "600px", overflowY: "scroll" }}>
+					<TableContainer component={Paper} elevation={0} sx={{ maxHeight: "60vh", overflowY: "scroll" }}>
 						<Table stickyHeader>
 							<TableHead>
 								<TableRow>

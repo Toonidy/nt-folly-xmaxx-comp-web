@@ -654,7 +654,7 @@ const DailyLeaderboardDialog = (props: DailyLeaderboardDialogProps) => {
 				</Typography>
 			</DialogTitle>
 			<DialogContent>
-				<TableContainer component={Paper} sx={{ maxHeight: "600px", overflowY: "scroll" }}>
+				<TableContainer component={Paper} elevation={0} sx={{ maxHeight: "60vh", overflowY: "scroll" }}>
 					<Table>
 						<TableHead>
 							<TableRow>

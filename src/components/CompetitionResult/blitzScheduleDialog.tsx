@@ -12,6 +12,7 @@ import {
 	Button,
 	Select,
 	MenuItem,
+	Paper,
 	TableContainer,
 	Table,
 	TableHead,
@@ -142,11 +143,13 @@ export const BlitzScheduleDialog = (props: BlitzScheduleDialogProps) => {
 					Points are awarded for: <em>Most Races, Points, Highest Speed and Accuracy</em>.
 				</Typography>
 				<TableContainer
+					component={Paper}
+					elevation={0}
 					sx={{
-						maxHeight: "600px",
-						overflowY: "scroll",
 						border: `1px solid #aaa`,
 						mt: 2,
+						overflowY: "auto",
+						maxHeight: "50vh",
 						"& .MuiTableCell-root": {
 							textAlign: "center",
 						},
