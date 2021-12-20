@@ -707,7 +707,7 @@ const DailyLeaderboardDialog = (props: DailyLeaderboardDialogProps) => {
 const getMultiplierBackgroundColor = (m: number) => {
 	switch (m) {
 		case 1:
-			return "radial-gradient(#c5c5c5, #3a3a3a))"
+			return "radial-gradient(#c5c5c5, #3a3a3a)"
 		case 2:
 			return "radial-gradient(#2cc0ff, #143877)"
 		case 4:
