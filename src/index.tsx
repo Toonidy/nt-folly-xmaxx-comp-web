@@ -14,8 +14,9 @@ if (process.env.NODE_ENV === "production") {
 }
 
 // Setup GraphQL Client
+const gqlHostname = process.env.REACT_APP_API_ENDPOINT || window.location.host
 const client = new ApolloClient({
-	uri: `//${process.env.NODE_ENV === "production" ? process.env.REACT_APP_API_ENDPOINT : window.location.host}/api/gql/query`,
+	uri: `//${gqlHostname}/api/gql/query`,
 	cache: new InMemoryCache(),
 })
 

@@ -1,5 +1,5 @@
 import dayjs from "dayjs"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useLayoutEffect, useRef } from "react"
 import { gql, useLazyQuery } from "@apollo/client"
 import {
 	Box,
@@ -28,6 +28,8 @@ const COMPETITIONS = gql`
 		competitions(timeRange: { timeFrom: $timeFrom, timeTo: $timeTo }) {
 			id
 			multiplier
+			startAt
+			finishAt
 			grindRewards {
 				rank
 				points
@@ -52,6 +54,8 @@ const COMPETITIONS = gql`
 interface Competition {
 	id: string
 	multiplier: number
+	startAt: string
+	finishAt: string
 	grindRewards: CompetitionPrize[]
 	pointRewards: CompetitionPrize[]
 	speedRewards: CompetitionPrize[]
@@ -77,6 +81,7 @@ interface BlitzScheduleDialogProps {
 export const BlitzScheduleDialog = (props: BlitzScheduleDialogProps) => {
 	const { show, defaultDay } = props
 
+	const targetRowRef = useRef<HTMLTableRowElement>(null)
 	const [day, setDay] = useState(defaultDay)
 	const [loadCompetitions, { data, loading, error }] = useLazyQuery<{ competitions: Competition[] }>(COMPETITIONS)
 
@@ -98,6 +103,13 @@ export const BlitzScheduleDialog = (props: BlitzScheduleDialogProps) => {
 			},
 		})
 	}, [show, day, loadCompetitions])
+
+	useEffect(() => {
+		const now = new Date()
+		if (!data || !targetRowRef.current || CompetitionDates[day].from > now || CompetitionDates[day].to < now) {
+			return
+		}
+	}, [data, day])
 
 	return (
 		<Dialog open={show} onClose={props.onClose}>
@@ -164,38 +176,23 @@ export const BlitzScheduleDialog = (props: BlitzScheduleDialogProps) => {
 						</TableHead>
 						<TableBody>
 							{CompetitionTimes.map((t, i) => {
+								const now = new Date()
 								const compData = data && data.competitions[i] ? data.competitions[i] : null
+								let isScrollTarget = !!(
+									data &&
+									data.competitions[i + 1] &&
+									new Date(data.competitions[i + 1].startAt) <= now &&
+									new Date(data.competitions[i + 1].finishAt) > now
+								) // 1 row before the current time (to deal with sticky headers)
+
 								return (
-									<TableRow key={`blitz-schedule-time-${t.from.getTime()}`}>
-										<TableCell>{dayjs(t.from).format("hh:mm A")}</TableCell>
-										{loading && (
-											<TableCell colSpan={6}>
-												<Skeleton variant={"rectangular"} />
-											</TableCell>
-										)}
-										{!loading && !compData && (
-											<>
-												<TableCell>?</TableCell>
-												<TableCell>?</TableCell>
-												<TableCell>?</TableCell>
-												<TableCell>?</TableCell>
-												<TableCell>?</TableCell>
-												<TableCell>?</TableCell>
-											</>
-										)}
-										{!loading && compData && (
-											<>
-												<TableCell>
-													{compData.multiplier > 1 ? <strong>x{compData.multiplier}</strong> : `x${compData.multiplier}`}
-												</TableCell>
-												{compData.grindRewards.map((r) => (
-													<TableCell key={`blitz-schedule-time-reward-${t.from.getTime()}-${r.rank}`}>
-														{compData.multiplier > 1 ? <strong>{r.points * compData.multiplier}</strong> : r.points}
-													</TableCell>
-												))}
-											</>
-										)}
-									</TableRow>
+									<ScheduleRow
+										key={`blitz-schedule-time-${t.from.getTime()}`}
+										time={t.from}
+										loading={loading}
+										compData={compData}
+										scrollTo={isScrollTarget}
+									/>
 								)
 							})}
 						</TableBody>
@@ -209,5 +206,59 @@ export const BlitzScheduleDialog = (props: BlitzScheduleDialogProps) => {
 				</Button>
 			</DialogActions>
 		</Dialog>
+	)
+}
+
+/** Props for <ScheduleRow>. */
+interface ScheduleRowProps {
+	loading: boolean
+	time: Date
+	scrollTo: boolean
+	compData: Competition | null
+}
+
+/**
+ * Displays a table row on a specific blitz time and auto scroll into view if current time.
+ */
+const ScheduleRow = (props: ScheduleRowProps) => {
+	const { compData, scrollTo, time, loading } = props
+
+	const targetRowRef = useRef<HTMLTableRowElement>(null)
+
+	useLayoutEffect(() => {
+		if (scrollTo) {
+			targetRowRef.current?.scrollIntoView({ block: "start" })
+		}
+	}, [scrollTo])
+
+	return (
+		<TableRow ref={targetRowRef}>
+			<TableCell>{dayjs(time).format("hh:mm A")}</TableCell>
+			{loading && (
+				<TableCell colSpan={6}>
+					<Skeleton variant={"rectangular"} />
+				</TableCell>
+			)}
+			{!loading && !compData && (
+				<>
+					<TableCell>?</TableCell>
+					<TableCell>?</TableCell>
+					<TableCell>?</TableCell>
+					<TableCell>?</TableCell>
+					<TableCell>?</TableCell>
+					<TableCell>?</TableCell>
+				</>
+			)}
+			{!loading && compData && (
+				<>
+					<TableCell>{compData.multiplier > 1 ? <strong>x{compData.multiplier}</strong> : `x${compData.multiplier}`}</TableCell>
+					{compData.grindRewards.map((r) => (
+						<TableCell key={`blitz-schedule-time-reward-${time.getTime()}-${r.rank}`}>
+							{compData.multiplier > 1 ? <strong>{r.points * compData.multiplier}</strong> : r.points}
+						</TableCell>
+					))}
+				</>
+			)}
+		</TableRow>
 	)
 }
