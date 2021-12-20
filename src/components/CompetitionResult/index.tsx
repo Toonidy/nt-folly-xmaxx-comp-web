@@ -195,11 +195,12 @@ export const CompetitionResult = () => {
 		<Box
 			component={"section"}
 			sx={{
+				color: theme.palette.primary.contrastText,
 				backgroundImage: "url(/comp-background.jpg)",
 				backgroundSize: "cover",
 				backgroundRepeat: "no-repeat",
 				backgroundColor: "rgba(0,0,0,0.3)",
-				color: theme.palette.primary.contrastText,
+				boxShadow: "rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset",
 			}}
 		>
 			<Box
