@@ -96,7 +96,7 @@ export const OverallLeaderboardDialog = (props: Props) => {
 	return (
 		<Dialog open={show} onClose={onClose}>
 			<DialogTitle>
-				Xmaxx 2021 Leaderboard
+				Xmaxx 2021 Big Competition Leaderboard
 				<Typography variant={"body2"}>
 					{dayjs(MainCompetitionRange.from).format("DD MMM YYYY hh:mm A")} to {dayjs(MainCompetitionRange.to).format("DD MMM YYYY hh:mm A")}
 				</Typography>
