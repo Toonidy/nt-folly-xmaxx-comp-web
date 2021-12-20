@@ -308,6 +308,7 @@ export const CompetitionResult = () => {
 									sx={{
 										mt: 0.5,
 										fontSize: theme.typography.pxToRem(14),
+										fontWeight: 300,
 									}}
 								>
 									<em>{dayjs(CompetitionDates[day].from).format("DD MMM YYYY")}</em> to{" "}
