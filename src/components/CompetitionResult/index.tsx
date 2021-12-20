@@ -21,22 +21,19 @@ import {
 	CircularProgress,
 	Alert,
 	Button,
-	Dialog,
-	DialogTitle,
-	DialogContent,
-	DialogActions,
 } from "@mui/material"
 import { AccessTime, EmojiEvents, EventNote } from "@mui/icons-material"
 import { CalendarDate } from "./calendarDate"
 import { CompCountdownChip, CompCountdownText } from "./compCountdown"
 import { OverallLeaderboardDialog } from "./overallLeaderboardDialog"
-import { getRankText } from "../../utils/text"
-import { CompetitionDates } from "../../constants/competitions"
-import NTGoldIcon from "../../assets/images/nt-gold-icon.png"
 import { BlitzScheduleDialog } from "./blitzScheduleDialog"
+import { DailyLeaderboardDialog } from "./dailyLeaderboardDialog"
+import { CompetitionDates } from "../../constants/competitions"
+import { Competition, MembershipType, UserStatus, LeaderboardEntry, CompetitionStatus } from "./types"
+import { RANKS } from "./constants"
 
-/** Ranks List for iterating purposes. */
-const RANKS = ["🥇 1st", "🥈 2nd", "🥉 3rd", "🎖️ 4th", "🎖️ 5th"]
+import NTGoldIcon from "../../assets/images/nt-gold-icon.png"
+import { BlitzResultsDialog } from "./blitzResultsDialog"
 
 /** GQL query to get competition rewards between 2 dates. */
 const COMPETITIONS = gql`
@@ -44,13 +41,22 @@ const COMPETITIONS = gql`
 		competitions(timeRange: { timeFrom: $timeFrom, timeTo: $timeTo }) {
 			id
 			multiplier
+			status
 			startAt
 			finishAt
 			leaderboard {
 				id
+				speedRank
+				speedScore
 				speedReward
+				accuracyRank
+				accuracyScore
 				accuracyReward
+				grindRank
+				grindScore
 				grindReward
+				pointRank
+				pointScore
 				pointReward
 				user {
 					id
@@ -80,61 +86,6 @@ const COMPETITIONS = gql`
 	}
 `
 
-/** Competition Rewards gql object. */
-interface Competition {
-	id: string
-	multiplier: number
-	startAt: Date
-	finishAt: Date
-	leaderboard: CompetitionUser[]
-	grindRewards: CompetitionPrize[]
-	pointRewards: CompetitionPrize[]
-	speedRewards: CompetitionPrize[]
-	accuracyRewards: CompetitionPrize[]
-}
-
-/** Competition Prize gql object. */
-interface CompetitionPrize {
-	rank: number
-	points: number
-}
-
-/** User Status values. */
-enum UserStatus {
-	NEW = "NEW",
-	ACTIVE = "ACTIVE",
-	DISQUALIFIED = "DISQUALIFIED",
-}
-
-/** GQL Enum for user statuses. */
-enum MembershipType {
-	BASIC = "BASIC",
-	GOLD = "GOLD",
-}
-
-/** Competition User gql obj. */
-interface CompetitionUser {
-	id: string
-	speedReward: number
-	accuracyReward: number
-	grindReward: number
-	pointReward: number
-	user: {
-		username: string
-		displayName: string
-		status: UserStatus
-		membershipType: MembershipType
-	}
-}
-
-/** Leaderboard Table Record Data. */
-interface LeaderboardEntry {
-	username: string
-	displayName: string
-	totalPoints: number
-	membershipType: MembershipType
-}
-
 /**
  * Competition Result Section.
  */
@@ -148,6 +99,7 @@ export const CompetitionResult = () => {
 	const [showSchedule, setShowSchedule] = useState(false)
 	const [showDailyLeaderboard, setShowDailyLeaderboard] = useState(false)
 	const [showOverallLeaderboard, setShowOverallLeaderboard] = useState(false)
+	const [showBlitzResults, setShowBlitzResults] = useState(false)
 	const [day, setDay] = useState(() => {
 		const result = CompetitionDates.findIndex((t) => t.from <= now && t.to > now)
 		if (result === -1) {
@@ -419,14 +371,17 @@ export const CompetitionResult = () => {
 																color={"#222"}
 															>
 																{leaderboard[i].membershipType === MembershipType.GOLD && (
-																	<Box
-																		component={"img"}
-																		src={NTGoldIcon}
-																		alt={"Nitro Type Gold Icon"}
-																		sx={{ width: "24px", height: "18px" }}
-																	/>
+																	<>
+																		<Box
+																			component={"img"}
+																			src={NTGoldIcon}
+																			alt={"Nitro Type Gold Icon"}
+																			sx={{ width: "24px", height: "18px" }}
+																		/>
+																		&nbsp;
+																	</>
 																)}
-																<strong>&nbsp;{leaderboard[i].displayName}</strong>
+																<strong>{leaderboard[i].displayName}</strong>
 															</Link>
 														</TableCell>
 														<TableCell sx={{ textAlign: "right" }}>{leaderboard[i].totalPoints}</TableCell>
@@ -450,6 +405,21 @@ export const CompetitionResult = () => {
 									View More
 								</Button>
 							)}
+							{!loading &&
+								data?.competitions.some((c) => [CompetitionStatus.FINISHED, CompetitionStatus.FAILED].includes(c.status)) &&
+								CompetitionDates[day].from <= now && (
+									<Button
+										type={"button"}
+										variant={"contained"}
+										color={"info"}
+										startIcon={<EmojiEvents />}
+										onClick={() => setShowBlitzResults(true)}
+										fullWidth
+										sx={{ mt: 1 }}
+									>
+										View Blitz Results
+									</Button>
+								)}
 							{hideSideSection && (
 								<Button
 									type={"button"}
@@ -628,82 +598,16 @@ export const CompetitionResult = () => {
 				leaderboard={leaderboard}
 				onClose={() => setShowDailyLeaderboard(false)}
 			/>
+			<BlitzResultsDialog
+				show={showBlitzResults}
+				startAt={CompetitionDates[day].from}
+				finishAt={CompetitionDates[day].to}
+				competitions={data?.competitions}
+				onClose={() => setShowBlitzResults(false)}
+			/>
 			<OverallLeaderboardDialog show={showOverallLeaderboard} onClose={() => setShowOverallLeaderboard(false)} />
 			<BlitzScheduleDialog show={showSchedule} defaultDay={day} onClose={() => setShowSchedule(false)} />
 		</Box>
-	)
-}
-
-/** Props for <DailyLeaderboardDialog>. */
-interface DailyLeaderboardDialogProps {
-	show: boolean
-	startAt: Date
-	finishAt: Date
-	leaderboard: LeaderboardEntry[]
-	onClose: () => void
-}
-
-/**
- * Displays a Dialog containing the full leaderboard for the day.
- */
-const DailyLeaderboardDialog = (props: DailyLeaderboardDialogProps) => {
-	const { show, startAt, finishAt, leaderboard, onClose } = props
-	return (
-		<Dialog open={show} onClose={onClose}>
-			<DialogTitle>
-				Daily Leaderboard
-				<Typography variant={"body2"}>
-					{dayjs(startAt).format("DD MMM YYYY hh:mm A")} to {dayjs(finishAt).format("DD MMM YYYY hh:mm A")}
-				</Typography>
-			</DialogTitle>
-			<DialogContent>
-				<TableContainer component={Paper} elevation={0} sx={{ maxHeight: "60vh", overflowY: "scroll" }}>
-					<Table>
-						<TableHead>
-							<TableRow>
-								<TableCell sx={{ backgroundColor: "#697F42", color: "#eee" }}>Rank</TableCell>
-								<TableCell sx={{ backgroundColor: "#697F42", color: "#eee" }}>Member</TableCell>
-								<TableCell sx={{ backgroundColor: "#697F42", color: "#eee", textAlign: "right" }}>Folly Points</TableCell>
-							</TableRow>
-						</TableHead>
-						<TableBody>
-							{leaderboard.map((r, i) => {
-								return (
-									<TableRow key={`dialog-lb-rank-${i}`}>
-										<TableCell>{getRankText(i + 1)}</TableCell>
-										<TableCell>
-											<Link
-												href={`https://www.nitrotype.com/racer/${r.username}`}
-												target={"_blank"}
-												rel={"external noreferrer"}
-												color={"#222"}
-											>
-												{r.membershipType === MembershipType.GOLD && (
-													<Box
-														component={"img"}
-														src={NTGoldIcon}
-														alt={"Nitro Type Gold Icon"}
-														sx={{ width: "24px", height: "18px" }}
-													/>
-												)}
-												<strong>&nbsp;{r.displayName}</strong>
-											</Link>
-										</TableCell>
-										<TableCell sx={{ textAlign: "right" }}>{r.totalPoints}</TableCell>
-									</TableRow>
-								)
-							})}
-						</TableBody>
-					</Table>
-				</TableContainer>
-				<Typography variant={"caption"}>Scroll through the table to view all the participants.</Typography>
-			</DialogContent>
-			<DialogActions sx={{ justifyContent: "flex-end" }}>
-				<Button type={"button"} color={"primary"} variant={"contained"} onClick={onClose}>
-					Close
-				</Button>
-			</DialogActions>
-		</Dialog>
 	)
 }
 

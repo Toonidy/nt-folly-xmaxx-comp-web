@@ -137,14 +137,17 @@ export const OverallLeaderboardDialog = (props: Props) => {
 													color={"#222"}
 												>
 													{u.membershipType === MembershipType.GOLD && (
-														<Box
-															component={"img"}
-															src={NTGoldIcon}
-															alt={"Nitro Type Gold Icon"}
-															sx={{ width: "24px", height: "18px" }}
-														/>
+														<>
+															<Box
+																component={"img"}
+																src={NTGoldIcon}
+																alt={"Nitro Type Gold Icon"}
+																sx={{ width: "24px", height: "18px" }}
+															/>
+															&nbsp;
+														</>
 													)}
-													<strong>&nbsp;{u.displayName}</strong>
+													<strong>{u.displayName}</strong>
 												</Link>
 											</TableCell>
 											<TableCell sx={{ textAlign: "right" }}>{u.totalPoints}</TableCell>

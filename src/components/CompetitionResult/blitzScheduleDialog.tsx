@@ -117,12 +117,12 @@ export const BlitzScheduleDialog = (props: BlitzScheduleDialogProps) => {
 			<DialogTitle>Blitz Schedule</DialogTitle>
 			<DialogContent>
 				<Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
-					<Typography sx={{ mr: 1 }}>Day: </Typography>
+					<Typography sx={{ mr: 1 }}>Day:</Typography>
 					<Select
 						value={`${day}`}
 						size={"small"}
 						onChange={(e) => {
-							const day = parseInt(e.target.value)
+							const day = parseInt(e.target.value, 10)
 							if (!isNaN(day)) {
 								setDay(day)
 							}

@@ -8,8 +8,9 @@ import { App } from "./App"
 import { MainTheme } from "./theme"
 import reportWebVitals from "./reportWebVitals"
 
-if (process.env.NODE_ENV === "production") {
-	ReactGA.initialize("G-5STKYBBJ0M")
+// Setup Google Analytics
+if (process.env.NODE_ENV === "production" && process.env.REACT_APP_GA_MEASUREMENT_ID) {
+	ReactGA.initialize(process.env.REACT_APP_GA_MEASUREMENT_ID)
 	ReactGA.send("pageview")
 }
 

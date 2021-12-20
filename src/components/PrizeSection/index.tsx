@@ -36,7 +36,7 @@ export const PrizeSection = () => {
 		if (result === -1) {
 			return CompetitionDates[0].from > now ? 0 : CompetitionDates.length
 		}
-		return result
+		return Math.min(result, CompetitionDates.length + 3 - visibleSlides)
 	})
 
 	const prevDayClickHandler = useCallback(() => {
