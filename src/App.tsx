@@ -17,7 +17,6 @@ export const App = () => {
 	const isMobile = useMediaQuery(mobileMediaQuery)
 	return (
 		<>
-			<Snowfall />
 			<Box
 				sx={{
 					minHeight: "calc(100vh - 4rem)",
@@ -443,6 +442,7 @@ export const App = () => {
 					</Paper>
 				</Container>
 			</Box>
+			<Snowfall />
 		</>
 	)
 }

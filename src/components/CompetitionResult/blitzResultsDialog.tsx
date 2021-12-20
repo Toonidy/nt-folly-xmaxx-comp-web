@@ -46,7 +46,6 @@ export const BlitzResultsDialog = (props: Props) => {
 
 	useEffect(() => {
 		if (show && data && data.length > 0) {
-			console.log("Bird up")
 			setSelectedIndex(data.length - 1)
 		}
 	}, [show, data])
@@ -71,7 +70,6 @@ export const BlitzResultsDialog = (props: Props) => {
 						onChange={(e) => {
 							const index = parseInt(e.target.value, 10)
 							if (!isNaN(index)) {
-								console.log(e.target.value)
 								setSelectedIndex(index)
 							}
 						}}
