@@ -34,6 +34,9 @@ export const MainTheme = responsiveFontSizes(
 				body {
 					background: linear-gradient(to top, #283E51, #0A2342);
 				}
+				#root {
+					position: relative;
+				}
 				@font-face {
 					font-family: "nitrocash";
 					src: url("/fonts/nitro-cash.woff2") format("woff2"), url("/fonts/nitro-cash.woff") format("woff"), url("/fonts/nitro-cash.ttf") format("ttf"), url("/fonts/nitro-cash.eot") format("eot");
