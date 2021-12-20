@@ -123,7 +123,16 @@ export const App = () => {
 										Don't have time to race? Just do <em>one</em> and try to win the accuracy reward at any <em>blitz timeslot</em>.
 									</Typography>
 									<Typography component={"li"}>
-										Blitzes technically starts and ends at every X:X1; the scheduled times displayed are for easy readings
+										If you plan to a certain amount of races in one session, always do the last race on the Blitz Time. That way you can
+										enter <code>Speed</code> and <code>Accuracy</code> blitz.
+									</Typography>
+									<Typography component={"li"}>
+										Blitzes technically starts and ends at every X:X1; the scheduled times displayed are for easy readings. For example:{" "}
+										<code>9:00 AM to 9:10 AM</code>, all scores are recorded if you race between <code>9:01 AM to 9:11 AM</code> instead.
+									</Typography>
+									<Typography component={"li"}>
+										When you finish a race, don't wait for the <em>Result Screen</em>, refresh the webpage (<code>Ctrl+R</code> or{" "}
+										<code>F5</code>) <small>(NOTE: You can use a Userscript to do this automatically)</small>
 									</Typography>
 								</ul>
 							</Box>
