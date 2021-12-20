@@ -140,7 +140,10 @@ export const BlitzScheduleDialog = (props: BlitzScheduleDialogProps) => {
 
 				{error && <Alert severity={"error"}>Oh Folly, Silje broke stats wah...</Alert>}
 				<Typography variant={"body2"} gutterBottom>
-					Points are awarded for: <em>Most Races, Points, Highest Speed and Accuracy</em>.
+					<Box component={"span"} sx={{ fontWeight: 500 }}>
+						Folly Points
+					</Box>{" "}
+					are awarded for: <em>Most Races, Most Points, Highest Speed and Most Accurate</em>.
 				</Typography>
 				<TableContainer
 					component={Paper}
