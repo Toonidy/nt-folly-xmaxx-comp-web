@@ -113,7 +113,7 @@ export const BlitzScheduleDialog = (props: BlitzScheduleDialogProps) => {
 	}, [data, day])
 
 	return (
-		<Dialog open={show} onClose={props.onClose}>
+		<Dialog open={show} maxWidth={"md"} fullWidth onClose={props.onClose}>
 			<DialogTitle>Blitz Schedule</DialogTitle>
 			<DialogContent>
 				<Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>

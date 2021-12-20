@@ -94,7 +94,7 @@ export const OverallLeaderboardDialog = (props: Props) => {
 	})
 
 	return (
-		<Dialog open={show} onClose={onClose}>
+		<Dialog open={show} maxWidth={"md"} fullWidth onClose={onClose}>
 			<DialogTitle>
 				Xmaxx 2021 Big Competition Leaderboard
 				<Typography variant={"body2"}>

@@ -55,7 +55,7 @@ export const BlitzResultsDialog = (props: Props) => {
 		return null
 	}
 	return (
-		<Dialog open={show} onClose={onClose}>
+		<Dialog open={show} maxWidth={"md"} fullWidth onClose={onClose}>
 			<DialogTitle>
 				Blitz Results
 				<Typography variant={"body2"}>

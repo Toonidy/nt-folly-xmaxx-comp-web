@@ -36,7 +36,7 @@ interface DailyLeaderboardDialogProps {
 export const DailyLeaderboardDialog = (props: DailyLeaderboardDialogProps) => {
 	const { show, startAt, finishAt, leaderboard, onClose } = props
 	return (
-		<Dialog open={show} onClose={onClose}>
+		<Dialog open={show} maxWidth={"md"} fullWidth onClose={onClose}>
 			<DialogTitle>
 				Daily Leaderboard
 				<Typography variant={"body2"}>
