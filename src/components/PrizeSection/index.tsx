@@ -138,7 +138,7 @@ export const PrizeSection = () => {
 							<PrizeItem title={"Day 7"} value={"15 Million"} />
 						</Slide>
 						<Slide index={7}>
-							<PrizeItem title={"Main Prize"} value={"100 Million"} epicTier />
+							<PrizeItem title={"Main Prize"} value={"125 Million"} epicTier />
 						</Slide>
 						<Slide index={8}>
 							<PrizeItem title={"Main Prize"} value={"Nitro Type Gold"} epicTier isGold />
