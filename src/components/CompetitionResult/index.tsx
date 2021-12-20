@@ -491,10 +491,10 @@ export const CompetitionResult = () => {
 												{!currentComp && <Skeleton variant={"rectangular"} sx={{ bgcolor: "grey.400" }} />}
 												{currentComp && (
 													<>
-														<Box component={"span"} sx={{ mr: "1ch" }}>{` ${dayjs(currentComp.startAt)
+														<Box component={"span"} sx={{ mr: "1ch", fontWeight: 300 }}>{` ${dayjs(currentComp.startAt)
 															.subtract(1, "m")
 															.format("hh:mm A")} - ${dayjs(currentComp.finishAt).subtract(1, "m").format("hh:mm A")}`}</Box>
-														<small>({Intl.DateTimeFormat().resolvedOptions().timeZone})</small>
+														<Box sx={{ fontWeight: 300 }}>({Intl.DateTimeFormat().resolvedOptions().timeZone})</Box>
 													</>
 												)}
 											</Typography>
