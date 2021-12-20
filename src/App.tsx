@@ -68,11 +68,11 @@ export const App = () => {
 									How to Win
 								</Typography>
 								<Typography gutterBottom>
-									Win <em>Folly Points</em> by winning 10 minute blitz! The following blitz challenges include:
+									Collect <em>Folly Points</em> by winning 10 minute blitz! The following blitz challenges include:
 								</Typography>
 								<ul>
 									<Typography component={"li"}>Most Races</Typography>
-									<Typography component={"li"}>Highest Speed (ordered by most races)</Typography>
+									<Typography component={"li"}>Top Speed (ordered by most races)</Typography>
 									<Typography component={"li"}>Most Accurate (ordered by most races)</Typography>
 									<Typography component={"li"}>
 										Most Points earned on Nitro Type (ordered by most races){" "}
@@ -86,12 +86,22 @@ export const App = () => {
 									<small>
 										({dayjs(new Date(MainCompetitionRange.from)).format("hh:mm A")} {Intl.DateTimeFormat().resolvedOptions().timeZone})
 									</small>
-									, the player wih most collected points within the day will win <NTCashIcon />
+									, the player with the most collected <em>Folly Points</em> within the day will win <NTCashIcon />
 									{" 15 million!"}
 								</Typography>
 								<Typography gutterBottom>
-									At the end of the competition, I'll announce the winners for the big prizes (listed above). GLHF!
+									At the end of the competition, the players with the most collected <em>Folly Points</em> throughout the <em>week</em> will
+									win the following:
 								</Typography>
+								<ul>
+									<Typography component={"li"}>
+										<strong>Non Gold members</strong> - Top 2 Racers will win Nitro Type Gold
+									</Typography>
+									<Typography component={"li"}>
+										<strong>Already Gold members</strong> - Top Racer will win <NTCashIcon /> 125 million
+									</Typography>
+								</ul>
+								<Typography gutterBottom>GLHF!</Typography>
 								<Typography variant={"h2"} gutterBottom sx={{ mt: 2, fontFamily: "Rajdhani, sans-serif", fontWeight: 600 }}>
 									Rules
 								</Typography>
@@ -120,10 +130,21 @@ export const App = () => {
 										View the Blitz Challenge Calendar and try to win <em>Bonus Points</em>
 									</Typography>
 									<Typography component={"li"}>
-										Don't have time to race? Just do <em>one</em> and try to win the accuracy reward at any <em>blitz timeslot</em>.
+										Don't have time to race? Just do <em>one</em> and try to win the <code>Speed</code> and <code>Accuracy</code> reward on
+										any <em>blitz timeslot</em>.
 									</Typography>
 									<Typography component={"li"}>
-										Blitzes technically starts and ends at every X:X1; the scheduled times displayed are for easy readings
+										If you plan to a certain amount of races in one session, always do the last race on the next Blitz Time. That way you
+										can enter <code>Speed</code> and <code>Accuracy</code> blitz.
+									</Typography>
+									<Typography component={"li"}>
+										Blitzes technically starts and ends at every <code>X:X1</code>; the scheduled times displayed are for easy readings. For
+										example: when doing <em>9:00 AM to 9:10 AM</em>, all scores are recorded if you race between <em>9:01 AM to 9:11 AM</em>{" "}
+										instead.
+									</Typography>
+									<Typography component={"li"}>
+										When you finish a race, don't wait for the <em>Result Screen</em>, refresh the webpage (<code>Ctrl+R</code> or{" "}
+										<code>F5</code>) <small>(NOTE: You can use a Userscript to do this automatically)</small>
 									</Typography>
 								</ul>
 							</Box>
@@ -245,13 +266,37 @@ export const App = () => {
 											<ul>
 												<Typography component={"li"} variant={"body2"} gutterBottom>
 													<Link href={"https://reactjs.org/"} color={"#ddd"} target={"_blank"} rel={"external noreferrer"}>
-														<strong>React JS</strong>
-													</Link>{" "}
-												</Typography>
-												<Typography component={"li"} variant={"body2"} gutterBottom>
-													<Link href={"https://mui.com/"} color={"#ddd"} target={"_blank"} rel={"external noreferrer"}>
-														<strong>Material UI v5</strong>
+														<strong>React</strong>
 													</Link>
+													{" the engine behind many things for the below"}
+												</Typography>
+												<Typography component={"li"} variant={"body2"} gutterBottom sx={{ fontWeight: 300 }}>
+													<Link href={"https://mui.com/"} color={"#ddd"} target={"_blank"} rel={"external noreferrer"}>
+														<strong>MUI v5</strong>
+													</Link>
+													{" UI kit framework to layout this webpage"}
+												</Typography>
+												<Typography component={"li"} variant={"body2"} gutterBottom sx={{ fontWeight: 300 }}>
+													<Link
+														href={"https://www.npmjs.com/package/pure-react-carousel"}
+														color={"#ddd"}
+														target={"_blank"}
+														rel={"external noreferrer"}
+													>
+														<strong>pure-react-carousel</strong>
+													</Link>
+													{" for the slider prize items"}
+												</Typography>
+												<Typography component={"li"} variant={"body2"} gutterBottom sx={{ fontWeight: 300 }}>
+													<Link
+														href={"https://www.npmjs.com/package/react-countdown"}
+														color={"#ddd"}
+														target={"_blank"}
+														rel={"external noreferrer"}
+													>
+														<strong>react-countdown</strong>
+													</Link>
+													{" for the awesome end of competition countdown"}
 												</Typography>
 												<Typography component={"li"} variant={"body2"} gutterBottom sx={{ fontWeight: 300 }}>
 													{"The awesome "}
