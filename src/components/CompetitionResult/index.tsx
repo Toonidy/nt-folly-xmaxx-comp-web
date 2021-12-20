@@ -494,8 +494,10 @@ export const CompetitionResult = () => {
 													<>
 														<Box component={"span"} sx={{ mr: "1ch", fontWeight: 300 }}>{` ${dayjs(currentComp.startAt)
 															.subtract(1, "m")
-															.format("hh:mm A")} - ${dayjs(currentComp.finishAt).subtract(1, "m").format("hh:mm A")}`}</Box>
-														<Box sx={{ fontWeight: 300 }}>({Intl.DateTimeFormat().resolvedOptions().timeZone})</Box>
+															.format("hh:mm A")} - ${dayjs(currentComp.finishAt).subtract(1, "m").format("hh:mm A")} `}</Box>
+														<Box component={"small"} sx={{ fontWeight: 300 }}>
+															({Intl.DateTimeFormat().resolvedOptions().timeZone})
+														</Box>
 													</>
 												)}
 											</Typography>
