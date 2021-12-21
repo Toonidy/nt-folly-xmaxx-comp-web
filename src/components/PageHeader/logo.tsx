@@ -1,11 +1,12 @@
-import { useTheme, useMediaQuery, Box, Typography } from "@mui/material"
+import { useIsMobile } from "../../hooks/useIsMobile"
+import { useTheme, Box, Typography } from "@mui/material"
 
 /**
  * Display the Team Logo and Website Title.
  */
 export const Logo = () => {
 	const theme = useTheme()
-	const isMobile = useMediaQuery(theme.breakpoints.down(376))
+	const { isMobile } = useIsMobile()
 
 	return (
 		<Box

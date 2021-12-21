@@ -1,6 +1,7 @@
 import dayjs from "dayjs"
 import { useState, useEffect, useLayoutEffect, useRef } from "react"
 import { gql, useLazyQuery } from "@apollo/client"
+import { useIsMobile } from "../../hooks/useIsMobile"
 import {
 	Box,
 	Alert,
@@ -86,6 +87,8 @@ export const BlitzScheduleDialog = (props: BlitzScheduleDialogProps) => {
 	const [day, setDay] = useState(defaultDay)
 	const [loadCompetitions, { data, loading, error }] = useLazyQuery<{ competitions: Competition[] }>(COMPETITIONS)
 
+	const { isMobile } = useIsMobile()
+
 	useEffect(() => {
 		if (!show) {
 			return
@@ -113,7 +116,7 @@ export const BlitzScheduleDialog = (props: BlitzScheduleDialogProps) => {
 	}, [data, day])
 
 	return (
-		<Dialog open={show} maxWidth={"md"} fullWidth onClose={props.onClose}>
+		<Dialog open={show} maxWidth={"md"} fullWidth fullScreen={isMobile} onClose={props.onClose}>
 			<DialogTitle>Blitz Schedule</DialogTitle>
 			<DialogContent>
 				<Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
@@ -151,8 +154,8 @@ export const BlitzScheduleDialog = (props: BlitzScheduleDialogProps) => {
 					sx={{
 						border: `1px solid #aaa`,
 						mt: 2,
+						maxHeight: isMobile ? "80vh" : "60vh",
 						overflowY: "auto",
-						maxHeight: "50vh",
 						"& .MuiTableCell-root": {
 							textAlign: "center",
 						},
@@ -168,7 +171,7 @@ export const BlitzScheduleDialog = (props: BlitzScheduleDialogProps) => {
 						},
 					}}
 				>
-					<Table stickyHeader>
+					<Table stickyHeader size={isMobile ? "small" : undefined}>
 						<TableHead>
 							<TableRow>
 								<TableCell>Time</TableCell>
@@ -204,9 +207,11 @@ export const BlitzScheduleDialog = (props: BlitzScheduleDialogProps) => {
 						</TableBody>
 					</Table>
 				</TableContainer>
-				<Typography variant={"caption"}>Scroll through the table to view all the times.</Typography>
 			</DialogContent>
-			<DialogActions sx={{ justifyContent: "flex-end" }}>
+			<DialogActions sx={{ justifyContent: "space-between" }}>
+				<Typography component={"p"} variant={"caption"}>
+					Scroll through the table to view all the times.
+				</Typography>
 				<Button type={"button"} variant={"contained"} color={"primary"} onClick={props.onClose}>
 					Close
 				</Button>

@@ -1,5 +1,6 @@
 import dayjs from "dayjs"
 import { useState, useEffect, useMemo } from "react"
+import { useIsMobile } from "../../hooks/useIsMobile"
 import {
 	styled,
 	Box,
@@ -40,9 +41,11 @@ interface Props {
  */
 export const BlitzResultsDialog = (props: Props) => {
 	const { show, competitions, startAt, finishAt, onClose } = props
-	const data = useMemo(() => competitions?.filter((c) => c.leaderboard.length > 0 || c.status === CompetitionStatus.FAILED), [competitions])
 
+	const { isMobile } = useIsMobile()
 	const [selectedIndex, setSelectedIndex] = useState(0)
+
+	const data = useMemo(() => competitions?.filter((c) => c.leaderboard.length > 0 || c.status === CompetitionStatus.FAILED), [competitions])
 
 	useEffect(() => {
 		if (data && data.length > 0) {
@@ -54,7 +57,7 @@ export const BlitzResultsDialog = (props: Props) => {
 		return null
 	}
 	return (
-		<Dialog open={show} maxWidth={"md"} fullWidth onClose={onClose}>
+		<Dialog open={show} maxWidth={"sm"} fullWidth fullScreen={isMobile} onClose={onClose}>
 			<DialogTitle>
 				Blitz Results
 				<Typography variant={"body2"}>
@@ -62,7 +65,7 @@ export const BlitzResultsDialog = (props: Props) => {
 				</Typography>
 			</DialogTitle>
 			<DialogContent>
-				<Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+				<Box sx={{ display: "flex", alignItems: "center", flexWrap: "wrap", mb: 2 }}>
 					<Typography sx={{ mr: 1 }}>Time:</Typography>
 					<Select
 						value={`${selectedIndex}`}
@@ -74,10 +77,12 @@ export const BlitzResultsDialog = (props: Props) => {
 							}
 						}}
 						sx={{ mr: 1 }}
+						MenuProps={{ PaperProps: { sx: { maxHeight: "50vh" } } }}
 					>
 						{data.map((c, i) => (
 							<MenuItem key={`comp-day-select-${i}`} value={`${i}`}>
-								{dayjs(new Date(c.startAt)).format("hh:mm A")} to {dayjs(new Date(c.finishAt)).format("hh:mm A")}
+								{dayjs(new Date(c.startAt)).subtract(1, "m").format("hh:mm A")} to{" "}
+								{dayjs(new Date(c.finishAt)).subtract(1, "m").format("hh:mm A")}
 							</MenuItem>
 						))}
 					</Select>
@@ -210,7 +215,7 @@ const ResultTableItem = (props: ResultTableItemProps) => {
 				{title}
 			</Typography>
 			<TableContainer component={Paper}>
-				<Table>
+				<Table size={"small"}>
 					<TableHead>
 						<TableRow>
 							<TableHeaderCell>Rank</TableHeaderCell>

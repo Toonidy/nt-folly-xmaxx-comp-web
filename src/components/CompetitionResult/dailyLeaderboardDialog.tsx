@@ -1,4 +1,5 @@
 import dayjs from "dayjs"
+import { useIsMobile } from "../../hooks/useIsMobile"
 import {
 	Dialog,
 	DialogTitle,
@@ -35,8 +36,10 @@ interface DailyLeaderboardDialogProps {
  */
 export const DailyLeaderboardDialog = (props: DailyLeaderboardDialogProps) => {
 	const { show, startAt, finishAt, leaderboard, onClose } = props
+	const { isMobile } = useIsMobile()
+
 	return (
-		<Dialog open={show} maxWidth={"md"} fullWidth onClose={onClose}>
+		<Dialog open={show} maxWidth={"md"} fullWidth fullScreen={isMobile} onClose={onClose}>
 			<DialogTitle>
 				Daily Leaderboard
 				<Typography variant={"body2"}>
@@ -44,8 +47,8 @@ export const DailyLeaderboardDialog = (props: DailyLeaderboardDialogProps) => {
 				</Typography>
 			</DialogTitle>
 			<DialogContent>
-				<TableContainer component={Paper} elevation={0} sx={{ maxHeight: "60vh", overflowY: "scroll" }}>
-					<Table>
+				<TableContainer component={Paper} elevation={0} sx={{ maxHeight: isMobile ? "80vh" : "60vh", overflowY: "auto" }}>
+					<Table stickyHeader size={isMobile ? "small" : undefined}>
 						<TableHead>
 							<TableRow>
 								<TableCell sx={{ backgroundColor: "#697F42", color: "#eee" }}>Rank</TableCell>
@@ -86,9 +89,11 @@ export const DailyLeaderboardDialog = (props: DailyLeaderboardDialogProps) => {
 						</TableBody>
 					</Table>
 				</TableContainer>
-				<Typography variant={"caption"}>Scroll through the table to view all the participants.</Typography>
 			</DialogContent>
-			<DialogActions sx={{ justifyContent: "flex-end" }}>
+			<DialogActions sx={{ justifyContent: "space-between" }}>
+				<Typography component={"p"} variant={"caption"}>
+					Scroll through the table to view all the participants.
+				</Typography>
 				<Button type={"button"} color={"primary"} variant={"contained"} onClick={onClose}>
 					Close
 				</Button>

@@ -1,6 +1,7 @@
 import dayjs from "dayjs"
 import { useState, useEffect } from "react"
 import { gql, useLazyQuery } from "@apollo/client"
+import { useIsMobile } from "../../hooks/useIsMobile"
 import {
 	useTheme,
 	useMediaQuery,
@@ -28,12 +29,12 @@ import { CompCountdownChip, CompCountdownText } from "./compCountdown"
 import { OverallLeaderboardDialog } from "./overallLeaderboardDialog"
 import { BlitzScheduleDialog } from "./blitzScheduleDialog"
 import { DailyLeaderboardDialog } from "./dailyLeaderboardDialog"
+import { BlitzResultsDialog } from "./blitzResultsDialog"
 import { CompetitionDates } from "../../constants/competitions"
 import { Competition, MembershipType, UserStatus, LeaderboardEntry, CompetitionStatus } from "./types"
 import { RANKS } from "./constants"
 
 import NTGoldIcon from "../../assets/images/nt-gold-icon.png"
-import { BlitzResultsDialog } from "./blitzResultsDialog"
 
 /** GQL query to get competition rewards between 2 dates. */
 const COMPETITIONS = gql`
@@ -93,8 +94,9 @@ export const CompetitionResult = () => {
 	const theme = useTheme()
 	const hideSideSection = !useMediaQuery(theme.breakpoints.up(690))
 	const shrinkRightSection = !useMediaQuery(theme.breakpoints.up(550))
-	const isMobile = useMediaQuery(theme.breakpoints.down(376))
 	const now = new Date()
+
+	const { isMobile } = useIsMobile()
 
 	const [showSchedule, setShowSchedule] = useState(false)
 	const [showDailyLeaderboard, setShowDailyLeaderboard] = useState(false)
@@ -319,7 +321,7 @@ export const CompetitionResult = () => {
 					<Grid container spacing={2}>
 						<Grid item lg={5.5} width={"100%"}>
 							<TableContainer component={Paper}>
-								<Table>
+								<Table size={isMobile ? "small" : undefined}>
 									<TableHead>
 										<TableRow>
 											<TableCell sx={{ backgroundColor: "#697F42", color: "#eee" }}>Rank</TableCell>
@@ -459,7 +461,7 @@ export const CompetitionResult = () => {
 										</Typography>
 										<Box sx={{ display: "flex", alignItems: "center" }}>
 											<AccessTime sx={{ mr: "1ch", display: "inline-block" }} />
-											<Typography>
+											<Typography sx={{ display: "flex", flexWrap: "wrap" }}>
 												{!currentComp && <Skeleton variant={"rectangular"} sx={{ bgcolor: "grey.400" }} />}
 												{currentComp && (
 													<>
@@ -522,7 +524,7 @@ export const CompetitionResult = () => {
 										},
 									}}
 								>
-									<Table>
+									<Table size={isMobile ? "small" : undefined}>
 										<TableHead>
 											<TableRow>
 												<TableCell>Rank</TableCell>

@@ -1,6 +1,7 @@
 import dayjs from "dayjs"
 import Snowfall from "react-snowfall"
-import { useTheme, useMediaQuery, Box, Paper, Container, Typography, Link, Grid, Button } from "@mui/material"
+import { useIsMobile } from "./hooks/useIsMobile"
+import { useTheme, Box, Paper, Container, Typography, Link, Grid, Button } from "@mui/material"
 import { Logo } from "./components/PageHeader/logo"
 import { NTCashIcon } from "./components/Icon/ntCash"
 import { CompetitionResult } from "./components/CompetitionResult"
@@ -13,8 +14,7 @@ import { MainCompetitionRange } from "./constants/competitions"
  */
 export const App = () => {
 	const theme = useTheme()
-	const mobileMediaQuery = theme.breakpoints.down(376)
-	const isMobile = useMediaQuery(mobileMediaQuery)
+	const { isMobile, mobileMediaQuery } = useIsMobile()
 	return (
 		<>
 			<Box
@@ -46,7 +46,7 @@ export const App = () => {
 								borderTopLeftRadius: "16px",
 								borderTopRightRadius: "16px",
 								p: 2,
-								[theme.breakpoints.down(376)]: {
+								[theme.breakpoints.down(415)]: {
 									borderTopLeftRadius: "unset",
 									borderTopRightRadius: "unset",
 								},

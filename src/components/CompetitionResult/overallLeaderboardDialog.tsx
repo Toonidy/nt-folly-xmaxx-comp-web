@@ -1,6 +1,7 @@
 import dayjs from "dayjs"
 import { useEffect } from "react"
 import { gql, useLazyQuery } from "@apollo/client"
+import { useIsMobile } from "../../hooks/useIsMobile"
 import {
 	Dialog,
 	DialogTitle,
@@ -22,6 +23,7 @@ import {
 } from "@mui/material"
 import { getRankText } from "../../utils/text"
 import { CompetitionDates, MainCompetitionRange } from "../../constants/competitions"
+
 import NTGoldIcon from "../../assets/images/nt-gold-icon.png"
 
 /** GQL query to fetch all comp users. */
@@ -73,6 +75,8 @@ interface Props {
 export const OverallLeaderboardDialog = (props: Props) => {
 	const { show, onClose } = props
 
+	const { isMobile } = useIsMobile()
+
 	const now = new Date()
 	const compStarted = now >= CompetitionDates[0].from
 	const [loadLeaderboard, { data, loading, error }] = useLazyQuery<{ users: User[] }>(USERS)
@@ -94,7 +98,7 @@ export const OverallLeaderboardDialog = (props: Props) => {
 	})
 
 	return (
-		<Dialog open={show} maxWidth={"md"} fullWidth onClose={onClose}>
+		<Dialog open={show} maxWidth={"md"} fullWidth fullScreen={isMobile} onClose={onClose}>
 			<DialogTitle>
 				Xmaxx 2021 Big Competition Leaderboard
 				<Typography variant={"body2"}>
@@ -104,8 +108,8 @@ export const OverallLeaderboardDialog = (props: Props) => {
 			<DialogContent>
 				{error && <Alert severity={"error"}>Oh Folly, stats broken... wah.</Alert>}
 				{!error && (
-					<TableContainer component={Paper} elevation={0} sx={{ maxHeight: "60vh", overflowY: "scroll" }}>
-						<Table stickyHeader>
+					<TableContainer component={Paper} elevation={0} sx={{ maxHeight: isMobile ? "80vh" : "60vh", overflowY: "scroll" }}>
+						<Table stickyHeader size={isMobile ? "small" : undefined}>
 							<TableHead>
 								<TableRow>
 									<TableCell sx={{ backgroundColor: "#697F42", color: "#eee" }}>Rank</TableCell>
@@ -158,7 +162,10 @@ export const OverallLeaderboardDialog = (props: Props) => {
 					</TableContainer>
 				)}
 			</DialogContent>
-			<DialogActions sx={{ justifyContent: "flex-end" }}>
+			<DialogActions sx={{ justifyContent: "space-between" }}>
+				<Typography component={"p"} variant={"caption"}>
+					Scroll through the table to view all the participants.
+				</Typography>
 				<Button type={"button"} variant={"contained"} color={"primary"} onClick={onClose}>
 					Close
 				</Button>
