@@ -45,10 +45,10 @@ export const BlitzResultsDialog = (props: Props) => {
 	const [selectedIndex, setSelectedIndex] = useState(0)
 
 	useEffect(() => {
-		if (show && data && data.length > 0) {
+		if (data && data.length > 0) {
 			setSelectedIndex(data.length - 1)
 		}
-	}, [show, data])
+	}, [data])
 
 	if (!data) {
 		return null
@@ -84,10 +84,12 @@ export const BlitzResultsDialog = (props: Props) => {
 					<small>({Intl.DateTimeFormat().resolvedOptions().timeZone})</small>
 				</Box>
 
-				{data[selectedIndex].status === CompetitionStatus.FAILED && (
+				{data[selectedIndex] && data[selectedIndex].status === CompetitionStatus.FAILED && (
 					<Alert severity={"error"}>An error occurred when collecting stats. The "would be" results have been added onto the next blitz time.</Alert>
 				)}
-				{data[selectedIndex].status === CompetitionStatus.FINISHED && <ResultTable leaderboard={data[selectedIndex].leaderboard} />}
+				{data[selectedIndex] && data[selectedIndex].status === CompetitionStatus.FINISHED && (
+					<ResultTable leaderboard={data[selectedIndex].leaderboard} />
+				)}
 			</DialogContent>
 			<DialogActions sx={{ justifyContent: "flex-end" }}>
 				<Button type={"button"} color={"primary"} variant={"contained"} onClick={onClose}>
