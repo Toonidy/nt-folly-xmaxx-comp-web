@@ -154,7 +154,7 @@ export const BlitzScheduleDialog = (props: BlitzScheduleDialogProps) => {
 					sx={{
 						border: `1px solid #aaa`,
 						mt: 2,
-						maxHeight: isMobile ? "80vh" : "60vh",
+						maxHeight: "52vh",
 						overflowY: "auto",
 						"& .MuiTableCell-root": {
 							textAlign: "center",
