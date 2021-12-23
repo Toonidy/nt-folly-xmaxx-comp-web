@@ -23,12 +23,13 @@ import {
 	Alert,
 	Button,
 } from "@mui/material"
-import { AccessTime, EmojiEvents, EventNote } from "@mui/icons-material"
+import { AccessTime, EmojiEvents, EventNote, ShowChart } from "@mui/icons-material"
 import { CalendarDate } from "./calendarDate"
 import { CompCountdownChip, CompCountdownText } from "./compCountdown"
 import { OverallLeaderboardDialog } from "./overallLeaderboardDialog"
 import { BlitzScheduleDialog } from "./blitzScheduleDialog"
 import { DailyLeaderboardDialog } from "./dailyLeaderboardDialog"
+import { DailyStatsDialog } from "./dailyStatsDialog"
 import { BlitzResultsDialog } from "./blitzResultsDialog"
 import { CompetitionDates } from "../../constants/competitions"
 import { Competition, MembershipType, UserStatus, LeaderboardEntry, CompetitionStatus } from "./types"
@@ -100,6 +101,7 @@ export const CompetitionResult = () => {
 
 	const [showSchedule, setShowSchedule] = useState(false)
 	const [showDailyLeaderboard, setShowDailyLeaderboard] = useState(false)
+	const [showDailyStats, setShowDailyStats] = useState(false)
 	const [showOverallLeaderboard, setShowOverallLeaderboard] = useState(false)
 	const [showBlitzResults, setShowBlitzResults] = useState(false)
 	const [day, setDay] = useState(() => {
@@ -423,6 +425,19 @@ export const CompetitionResult = () => {
 										View Blitz Results
 									</Button>
 								)}
+							{!loading && CompetitionDates[day].from <= now && leaderboard.length > 0 && (
+								<Button
+									type={"button"}
+									variant={"contained"}
+									color={"info"}
+									startIcon={<ShowChart />}
+									onClick={() => setShowDailyStats(true)}
+									fullWidth
+									sx={{ mt: 1 }}
+								>
+									Daily Graph
+								</Button>
+							)}
 							{hideSideSection && (
 								<Button
 									type={"button"}
@@ -600,6 +615,13 @@ export const CompetitionResult = () => {
 				finishAt={CompetitionDates[day].to}
 				leaderboard={leaderboard}
 				onClose={() => setShowDailyLeaderboard(false)}
+			/>
+			<DailyStatsDialog
+				show={showDailyStats}
+				startAt={CompetitionDates[day].from}
+				finishAt={CompetitionDates[day].to}
+				competitions={data?.competitions}
+				onClose={() => setShowDailyStats(false)}
 			/>
 			<BlitzResultsDialog
 				show={showBlitzResults}
