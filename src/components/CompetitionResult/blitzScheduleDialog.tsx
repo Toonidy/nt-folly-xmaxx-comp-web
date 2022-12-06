@@ -108,13 +108,6 @@ export const BlitzScheduleDialog = (props: BlitzScheduleDialogProps) => {
 		})
 	}, [show, day, loadCompetitions])
 
-	useEffect(() => {
-		const now = new Date()
-		if (!data || !targetRowRef.current || CompetitionDates[day].from > now || CompetitionDates[day].to < now) {
-			return
-		}
-	}, [data, day])
-
 	return (
 		<Dialog open={show} maxWidth={"md"} fullWidth fullScreen={isMobile} onClose={props.onClose}>
 			<DialogTitle>Blitz Schedule</DialogTitle>
